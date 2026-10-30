@@ -20,7 +20,7 @@ private slots:
         QVERIFY(QFile::exists(i.gameDirectory+"/mods/other.jar"));QVERIFY(QFile::exists(i.gameDirectory+"/mods/OptiFine.jar"));
         Network net;auto iris=net.add("YL57xq9U","iris-version",jar("iris"));const auto plan=mc::planModInstall(i,iris,flag(),&net);
         QVERIFY(plan.error.contains(QStringLiteral("管理版本组件")));QVERIFY(net.requested.isEmpty());
-        mc::ModPlan altered;altered.target=i;altered.disableCandidates.insert("OptiFine.jar","conflict");altered.disableFiles={"OptiFine.jar"};altered.expectedFiles={{"OptiFine.jar","hash"}};
+        mc::ModPlan altered;altered.target=i;altered.disableCandidates.insert("OptiFine.jar","conflict");altered.disableFiles=QStringList{"OptiFine.jar"};altered.expectedFiles={{"OptiFine.jar","hash"}};
         auto applied=mc::applyModPlan(altered,flag(),{},&net);QVERIFY(applied.error.contains(QStringLiteral("版本组件")));QVERIFY(QFile::exists(i.gameDirectory+"/mods/OptiFine.jar"));QVERIFY(net.requested.isEmpty());
         // Vanilla OptiFine has no JAR in mods, and still must block a renderer swap.
         i.optifineFile.clear();i.loader="fabric";const auto noLocal=mc::planModInstall(i,iris,flag(),&net);QVERIFY(noLocal.error.contains(QStringLiteral("管理版本组件")));QVERIFY(net.requested.isEmpty());
@@ -43,21 +43,21 @@ private slots:
     }
     void officialCompatibilityCacheIsValidatedAndAdvisory(){
         QTemporaryDir dir;auto i=target(dir.path());i.loader="quilt";
-        mc::LocalMod mod;mod.id="vulkanmod";mod.ids={"vulkanmod"};mod.enabled=true;
+        mc::LocalMod mod;mod.id="vulkanmod";mod.ids=QStringList{"vulkanmod"};mod.enabled=true;
         QVERIFY(!mc::knownCompatibilityWarnings(i,mod).isEmpty());
         mod.enabled=false;QVERIFY(mc::knownCompatibilityWarnings(i,mod).isEmpty());mod.enabled=true;
         i.loader="fabric";QVERIFY(mc::knownCompatibilityWarnings(i,mod).isEmpty());i.loader="quilt";
         QString error;QVERIFY(!mc::saveCompatibilityList(i,"<html>error</html>",&error));QVERIFY(!mc::compatibilityList(i).cached);
         const QByteArray rules=R"([{"ids":["sample"],"name":"Sample","type":"GAME"}])";
         QVERIFY(mc::saveCompatibilityList(i,rules,&error));QVERIFY(mc::compatibilityList(i).cached);
-        QVERIFY(mc::knownCompatibilityWarnings(i,mod).isEmpty());mod.ids={"sample"};QVERIFY(!mc::knownCompatibilityWarnings(i,mod).isEmpty());
+        QVERIFY(mc::knownCompatibilityWarnings(i,mod).isEmpty());mod.ids=QStringList{"sample"};QVERIFY(!mc::knownCompatibilityWarnings(i,mod).isEmpty());
         QVERIFY(!mc::saveCompatibilityList(i,"[]",&error));QVERIFY(mc::compatibilityList(i).cached);QCOMPARE(mc::compatibilityList(i).rules.size(),1);
     }
     void quiltAllowsFabricMetadataButNotTheReverse(){
-        mc::ResourceFile file;file.gameVersions={"1.20.1"};file.loaders={"fabric"};
+        mc::ResourceFile file;file.gameVersions=QStringList{"1.20.1"};file.loaders=QStringList{"fabric"};
         QVERIFY(mc::ModrinthProvider::compatible(file,"1.20.1","quilt"));
         QVERIFY(!mc::ModrinthProvider::compatible(file,"1.20.2","quilt"));
-        file.loaders={"quilt"};QVERIFY(!mc::ModrinthProvider::compatible(file,"1.20.1","fabric"));
+        file.loaders=QStringList{"quilt"};QVERIFY(!mc::ModrinthProvider::compatible(file,"1.20.1","fabric"));
         const auto query=QUrlQuery(mc::ModrinthProvider().versionsUrl("sample","1.20.1","quilt"));
         QCOMPARE(QJsonDocument::fromJson(query.queryItemValue("loaders").toUtf8()).array(),QJsonArray({"quilt","fabric"}));
         QTemporaryDir dir;auto i=target(dir.path());i.loader="quilt";
@@ -118,7 +118,7 @@ private slots:
         QVERIFY(save(file,zip({{"optifine/OptiFineClassTransformer.class",QByteArray::fromHex("cafebabe")},{"optifine/Installer.class",QByteArray::fromHex("cafebabe")}})));
         QCOMPARE(mc::inspectMod(file).id,QString("optifine"));Network net;auto iris=net.add("YL57xq9U","iris-version",jar("iris"));auto plan=mc::planModInstall(i,iris,flag(),&net);QVERIFY2(plan.error.isEmpty(),qPrintable(plan.error));QVERIFY(plan.disableCandidates.contains("renamed.jar"));
         auto result=mc::applyModPlan(plan,flag(),{},&net);QVERIFY(!result.error.isEmpty());QVERIFY(QFile::exists(file));
-        plan.disableFiles={"renamed.jar"};result=mc::applyModPlan(plan,flag(),{},&net);QVERIFY2(result.error.isEmpty(),qPrintable(result.error));QVERIFY(!QFile::exists(file));QVERIFY(QFile::exists(file+".disabled"));
+        plan.disableFiles=QStringList{"renamed.jar"};result=mc::applyModPlan(plan,flag(),{},&net);QVERIFY2(result.error.isEmpty(),qPrintable(result.error));QVERIFY(!QFile::exists(file));QVERIFY(QFile::exists(file+".disabled"));
     }
 
     void resourcePackagesValidateReuseAndBackup(){
@@ -248,9 +248,9 @@ versionRange="[2,3)"
 )TOML";
     const auto bytes=zip({{"fabric.mod.json",fabric},{"META-INF/mods.toml",forge}});const auto path=dir.filePath("universal.jar");QVERIFY(save(path,bytes));
     const auto generic=mc::inspectMod(path);QCOMPARE(generic.metadata.size(),2);const auto forFabric=mc::selectModMetadata(generic,"fabric"),forForge=mc::selectModMetadata(generic,"forge");QCOMPARE(forFabric.version,QString("1.0.0"));QCOMPARE(forForge.version,QString("2.0.0"));QVERIFY(forFabric.requiredIds.contains("fabric_dep"));QVERIFY(!forFabric.requiredIds.contains("forge_dep"));QVERIFY(forForge.requiredIds.contains("forge_dep"));QVERIFY(!forForge.requiredIds.contains("fabric_dep"));
-    auto fabricTarget=target(dir.filePath("fabric")),forgeTarget=target(dir.filePath("forge"));forgeTarget.loader="forge";forgeTarget.loaderVersion="47.2.0";mc::LocalMod fabricDep;fabricDep.known=true;fabricDep.loader="fabric";fabricDep.id="fabric_dep";fabricDep.ids={"fabric_dep"};fabricDep.version="1.1";fabricDep.fileName="fabric_dep.jar";auto forgeDep=fabricDep;forgeDep.loader="forge";forgeDep.id="forge_dep";forgeDep.ids={"forge_dep"};forgeDep.version="2.1";forgeDep.fileName="forge_dep.jar";
+    auto fabricTarget=target(dir.filePath("fabric")),forgeTarget=target(dir.filePath("forge"));forgeTarget.loader="forge";forgeTarget.loaderVersion="47.2.0";mc::LocalMod fabricDep;fabricDep.known=true;fabricDep.loader="fabric";fabricDep.id="fabric_dep";fabricDep.ids=QStringList{"fabric_dep"};fabricDep.version="1.1";fabricDep.fileName="fabric_dep.jar";auto forgeDep=fabricDep;forgeDep.loader="forge";forgeDep.id="forge_dep";forgeDep.ids=QStringList{"forge_dep"};forgeDep.version="2.1";forgeDep.fileName="forge_dep.jar";
     QVERIFY(mc::checkModSet(fabricTarget,{generic,fabricDep},true).errors.isEmpty());QVERIFY(mc::checkModSet(forgeTarget,{generic,forgeDep},true).errors.isEmpty());QVERIFY(!mc::checkModSet(forgeTarget,{generic},true).errors.isEmpty());
-    Network net;auto file=net.add("universal","v1",bytes);file.loaders={"fabric","forge"};net.bodies.insert("/v2/project/universal/version","[]");auto plan=mc::planModInstall(forgeTarget,file,flag(),&net);QVERIFY(plan.error.isEmpty());auto missing=mc::applyModPlan(plan,flag(),{},&net);QVERIFY(!missing.error.isEmpty());QVERIFY(mc::localMods(forgeTarget).isEmpty());
+    Network net;auto file=net.add("universal","v1",bytes);file.loaders=QStringList{"fabric","forge"};net.bodies.insert("/v2/project/universal/version","[]");auto plan=mc::planModInstall(forgeTarget,file,flag(),&net);QVERIFY(plan.error.isEmpty());auto missing=mc::applyModPlan(plan,flag(),{},&net);QVERIFY(!missing.error.isEmpty());QVERIFY(mc::localMods(forgeTarget).isEmpty());
     const QByteArray noDepsForge=R"TOML([[mods]]
 modId="universal"
 version="2.0.0"
@@ -262,7 +262,7 @@ void ModsTests::universalJarRejectsBrokenTargetVariantAndKeepsOtherVariants(){
     const auto quilt=QJsonDocument(QJsonObject{{"quilt_loader",QJsonObject{{"id","quilt_id"},{"version","3.0"}}}}).toJson();const auto fabric=QJsonDocument(QJsonObject{{"id","fabric_id"},{"version","4.0"}}).toJson();QVERIFY(save(path,zip({{"fabric.mod.json",fabric},{"quilt.mod.json",quilt}})));QCOMPARE(mc::inspectMod(path,"quilt").id,QString("quilt_id"));QCOMPARE(mc::inspectMod(path,"fabric").id,QString("fabric_id"));
 }
 void ModsTests::nestedDependenciesKeepTheirOwnVersionConstraints(){
-    QTemporaryDir dir;const auto path=dir.filePath("nested.jar");const auto root=QJsonDocument(QJsonObject{{"id","root"},{"version","1"},{"jars",QJsonArray{QJsonObject{{"file","nested.jar"}}}}}).toJson();QVERIFY(save(path,zip({{"fabric.mod.json",root},{"nested.jar",jar("child","1",{{"dep",">=2"}})}})));auto i=target(dir.filePath("game"));auto mod=mc::inspectMod(path,"fabric");QVERIFY(mod.known);QVERIFY(mod.ids.contains("child"));mc::LocalMod dep;dep.known=true;dep.loader="fabric";dep.ids={"dep"};dep.version="1";dep.name="Dependency";dep.fileName="dep.jar";QVERIFY(!mc::checkModSet(i,{mod,dep},true).errors.isEmpty());dep.version="2";QVERIFY(mc::checkModSet(i,{mod,dep},true).errors.isEmpty());
+    QTemporaryDir dir;const auto path=dir.filePath("nested.jar");const auto root=QJsonDocument(QJsonObject{{"id","root"},{"version","1"},{"jars",QJsonArray{QJsonObject{{"file","nested.jar"}}}}}).toJson();QVERIFY(save(path,zip({{"fabric.mod.json",root},{"nested.jar",jar("child","1",{{"dep",">=2"}})}})));auto i=target(dir.filePath("game"));auto mod=mc::inspectMod(path,"fabric");QVERIFY(mod.known);QVERIFY(mod.ids.contains("child"));mc::LocalMod dep;dep.known=true;dep.loader="fabric";dep.ids=QStringList{"dep"};dep.version="1";dep.name="Dependency";dep.fileName="dep.jar";QVERIFY(!mc::checkModSet(i,{mod,dep},true).errors.isEmpty());dep.version="2";QVERIFY(mc::checkModSet(i,{mod,dep},true).errors.isEmpty());
 }
 void ModsTests::disabledDependencyCanBeEnabledWithoutRedownloading(){
     QTemporaryDir dir;Network net;auto i=target(dir.filePath("game"));const auto dep=net.add("dep","d1",jar("dep"));const auto root=net.add("root","r1",jar("root","1",{{"dep",">=1"}}),{{"dep","","required"}});QVERIFY(save(i.gameDirectory+"/mods/my-dep.jar.disabled",net.bodies.value(dep.url.path())));const auto version=QJsonDocument::fromJson(net.bodies.value("/v2/version/d1")).object();net.bodies.insert("/v2/version_files",QJsonDocument(QJsonObject{{dep.sha512,version}}).toJson());
@@ -276,7 +276,7 @@ void ModsTests::selectionPrunesOrphansButRetainsSharedDependencies(){
     QTemporaryDir dir;Network net;auto i=target(dir.filePath("game"));net.add("leaf","l1",jar("leaf"));net.add("exclusive","e1",jar("exclusive"));net.add("left","a1",jar("left"),{{"leaf","","required"},{"exclusive","","required"}});net.add("right","b1",jar("right"),{{"leaf","","required"}});auto root=net.add("root","r1",jar("root"),{{"left","","required"},{"right","","required"}});auto plan=mc::planModInstall(i,root,flag(),&net);QVERIFY(plan.error.isEmpty());auto selected=mc::selectModDependencies(plan,{"right","leaf","exclusive"});QVERIFY(selected.activeProjects.contains("leaf"));QVERIFY(!selected.activeProjects.contains("exclusive"));QVERIFY(!selected.demandedProjects.contains("exclusive"));QVERIFY(selected.demandedProjects.contains("left"));net.requested.clear();QVERIFY(mc::applyModPlan(selected,flag(),{},&net).error.isEmpty());QVERIFY(!net.requested.contains("/left-a1.jar"));QVERIFY(!net.requested.contains("/exclusive-e1.jar"));QCOMPARE(mc::localMods(i).size(),3);
 }
 void ModsTests::optionalDependenciesAreOffByDefaultAndIncludeTheirRequiredChain(){
-    QTemporaryDir dir;Network net;auto i=target(dir.filePath("game"));auto leaf=net.add("leaf","l1",jar("leaf"));auto extra=net.add("extra","e1",jar("extra","1",{{"leaf",">=1"}}),{{"leaf","","required"}});auto root=net.add("root","r1",jar("root"),{{"extra","","optional"}});auto plan=mc::planModInstall(i,root,flag(),&net);QVERIFY2(plan.error.isEmpty(),qPrintable(plan.error));QCOMPARE(plan.files.size(),1);QCOMPARE(plan.optionalPlans.size(),1);auto defaults=mc::selectModDependencies(plan,{"leaf"});QCOMPARE(defaults.files.size(),1);QVERIFY(defaults.skippedProjects.isEmpty());auto installedOptional=plan;installedOptional.optionalPlans.first().files.removeFirst();installedOptional.optionalPlans.first().files.clear();installedOptional.optionalPlans.first().files.append(leaf);installedOptional.optionalPlans.first().reusedProjects={"extra"};installedOptional.optionalPlans.first().reusedFiles.insert("extra","existing-extra.jar");auto preserve=mc::selectModDependencies(installedOptional,{"leaf"});QVERIFY(preserve.activeProjects.contains("extra"));QVERIFY(preserve.activeProjects.contains("leaf"));auto selected=mc::selectModDependencies(plan,{"extra","leaf"});QCOMPARE(selected.files.size(),3);QVERIFY(selected.skippedProjects.isEmpty());net.requested.clear();QVERIFY(mc::applyModPlan(selected,flag(),{},&net).error.isEmpty());QVERIFY(net.requested.contains(extra.url.path()));QVERIFY(net.requested.contains(leaf.url.path()));
+    QTemporaryDir dir;Network net;auto i=target(dir.filePath("game"));auto leaf=net.add("leaf","l1",jar("leaf"));auto extra=net.add("extra","e1",jar("extra","1",{{"leaf",">=1"}}),{{"leaf","","required"}});auto root=net.add("root","r1",jar("root"),{{"extra","","optional"}});auto plan=mc::planModInstall(i,root,flag(),&net);QVERIFY2(plan.error.isEmpty(),qPrintable(plan.error));QCOMPARE(plan.files.size(),1);QCOMPARE(plan.optionalPlans.size(),1);auto defaults=mc::selectModDependencies(plan,{"leaf"});QCOMPARE(defaults.files.size(),1);QVERIFY(defaults.skippedProjects.isEmpty());auto installedOptional=plan;installedOptional.optionalPlans.first().files.removeFirst();installedOptional.optionalPlans.first().files.clear();installedOptional.optionalPlans.first().files.append(leaf);installedOptional.optionalPlans.first().reusedProjects=QStringList{"extra"};installedOptional.optionalPlans.first().reusedFiles.insert("extra","existing-extra.jar");auto preserve=mc::selectModDependencies(installedOptional,{"leaf"});QVERIFY(preserve.activeProjects.contains("extra"));QVERIFY(preserve.activeProjects.contains("leaf"));auto selected=mc::selectModDependencies(plan,{"extra","leaf"});QCOMPARE(selected.files.size(),3);QVERIFY(selected.skippedProjects.isEmpty());net.requested.clear();QVERIFY(mc::applyModPlan(selected,flag(),{},&net).error.isEmpty());QVERIFY(net.requested.contains(extra.url.path()));QVERIFY(net.requested.contains(leaf.url.path()));
     auto withoutLeaf=mc::selectModDependencies(plan,{"extra"});QCOMPARE(withoutLeaf.skippedProjects,QStringList{"leaf"});QVERIFY(withoutLeaf.activeProjects.contains("extra"));QVERIFY(!withoutLeaf.activeProjects.contains("leaf"));
 }
 void ModsTests::optionalIncompatibilityBlocksOnlyTheSelectedCombination(){

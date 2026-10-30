@@ -192,8 +192,8 @@ private slots:
         QCOMPARE(loaders.size(),1); QCOMPARE(loaders.first().id,QString("future-loader"));
     }
     void projectSupportDoesNotProveFileCompatibility() {
-        mc::ResourceFile forge; forge.gameVersions={"1.20.1"}; forge.loaders={"forge"};
-        mc::ResourceFile fabric; fabric.gameVersions={"1.21.1"}; fabric.loaders={"fabric"};
+        mc::ResourceFile forge; forge.gameVersions=QStringList{"1.20.1"}; forge.loaders=QStringList{"forge"};
+        mc::ResourceFile fabric; fabric.gameVersions=QStringList{"1.21.1"}; fabric.loaders=QStringList{"fabric"};
         QVERIFY(mc::ModrinthProvider::compatible(forge,"1.20.1","forge"));
         QVERIFY(!mc::ModrinthProvider::compatible(forge,"1.20.1","neoforge"));
         QVERIFY(!mc::ModrinthProvider::compatible(forge,"1.20.1","fabric"));

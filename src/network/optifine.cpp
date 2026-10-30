@@ -231,7 +231,7 @@ void verifyOptifine(const QJsonObject &metadata,const QString &root,const QStrin
     const auto component=metadata.value("_m2clOptifine").toObject();if(component.isEmpty())return;
     const auto components=gameLoaderComponents(metadata);const auto loader=components.isEmpty()?QString("vanilla"):components.firstKey();
     const auto problem=optifineCompatibility(component,metadata.value("_baseId").toString(metadata.value("id").toString()),loader,components.value(loader));if(!problem.isEmpty())fail(problem);
-    const auto modFile=component.value("modFile").toString();if(!modFile.isEmpty()&&hash(checkedPath(directory,"mods/"+modFile))!=component.value("sha256"))fail(QCoreApplication::translate("M2CL", "OptiFine 文件缺失或已变化，请从版本组件重新安装"));
-    for(const auto &v:component.value("files").toArray()){const auto f=v.toObject();if(hash(checkedPath(root,f.value("path").toString()))!=f.value("sha256"))fail(QCoreApplication::translate("M2CL", "OptiFine 库文件已变化，请重新安装"));}
+    const auto modFile=component.value("modFile").toString();if(!modFile.isEmpty()&&hash(checkedPath(directory,"mods/"+modFile))!=component.value("sha256").toString())fail(QCoreApplication::translate("M2CL", "OptiFine 文件缺失或已变化，请从版本组件重新安装"));
+    for(const auto &v:component.value("files").toArray()){const auto f=v.toObject();if(hash(checkedPath(root,f.value("path").toString()))!=f.value("sha256").toString())fail(QCoreApplication::translate("M2CL", "OptiFine 库文件已变化，请重新安装"));}
 }
 }

@@ -55,7 +55,7 @@ private slots:
     }
     void localizedDiagnosticsPreserveCompatibilityChecks(){
         mc::Instance instance;instance.version="1.20.1";instance.loader="fabric";instance.loaderVersion="0.16.10";
-        mc::LocalMod mod;mod.name="Local mod";mod.id="local";mod.ids={"local"};mod.loader="forge";mod.known=true;
+        mc::LocalMod mod;mod.name="Local mod";mod.id="local";mod.ids=QStringList{"local"};mod.loader="forge";mod.known=true;
         for(const auto language:{"en_US","zh_TW","zh_CN"}){
             QVERIFY(mc::installLanguage(*qApp,language));
             const auto problem=mc::modEnvironmentProblem(mod,instance);QVERIFY(!problem.isEmpty());
@@ -84,7 +84,7 @@ private slots:
             plan.target.version="1.20.1";plan.target.loader="fabric";plan.target.loaderVersion="0.16.10";
             mc::ResourceFile root;root.projectId="root";root.versionName="Main mod";root.versionNumber="1.0";root.fileName="main.jar";
             auto dependency=root;dependency.projectId="api";dependency.versionName="API dependency";dependency.fileName="api.jar";
-            plan.files={root,dependency};plan.resolved=plan.files;plan.edges={{"root","api","","required"}};plan.requiredProjects={"api"};
+            plan.files={root,dependency};plan.resolved=plan.files;plan.edges={{"root","api","","required"}};plan.requiredProjects=QStringList{"api"};
             mc::ModPlanView dialog(plan);dialog.resize(700,520);dialog.show();QCoreApplication::processEvents();
             auto choice=dialog.findChild<QCheckBox *>("dependencyChoice");QVERIFY(choice);QVERIFY(choice->isChecked());
             auto buttons=dialog.findChild<QDialogButtonBox *>();QVERIFY(buttons);auto install=buttons->button(QDialogButtonBox::Ok);QVERIFY(install);

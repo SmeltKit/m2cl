@@ -16,7 +16,16 @@ Third-party components retain their own licenses and notices:
 - MD4C 0.5.2: Copyright (c) 2016-2024 Martin Mitáš; MIT license.
   The original notice is in third_party/md4c/LICENSE.md, copied to
   md4c-LICENSE.md in the application's licenses directory.
-- Qt and zlib retain their upstream licenses and notices. Deployments must
-  preserve the notices for the specific libraries and plugins they distribute.
+- Qt 6.10.3 (Core, Gui, Widgets, Network, Concurrent, Svg and selected macOS
+  runtime plugins): Copyright (C) The Qt Company Ltd. and other contributors.
+  Used under GNU LGPL version 3 only; Qt is dynamically linked. Complete
+  LGPLv3/GPLv3 texts, third-party copyrights and original license files are in
+  third_party/qt/, copied to licenses/qt/ in the application distribution.
+  See qt/SOURCE.txt there for corresponding source and rebuilding/replacement.
+  The project's additional terms do not apply to Qt or its third-party parts.
+- zlib: Copyright (C) Jean-loup Gailly and Mark Adler; zlib license. The current
+  macOS build links the operating system's /usr/lib/libz.1.dylib and does not
+  redistribute that system library. Other deployments must preserve notices
+  for the specific zlib binary they distribute.
 - Downloaded game files, loaders, Java runtimes, mods, shaders and resource
   packs, and third-party compatibility data are not relicensed by this notice.

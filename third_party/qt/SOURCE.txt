@@ -1,0 +1,113 @@
+Qt 6.10.3 — corresponding source and replacement instructions
+==========================================================
+
+Copyright (C) The Qt Company Ltd. and other contributors.
+Qt is used under LGPL-3.0-only. Third-party portions keep their own licenses.
+M2CL project-specific additional terms do not apply to these portions.
+
+SOURCE DELIVERY
+
+For a binary release using this Qt baseline, provide these companion archives
+at the same download location and with equivalent access as the binary:
+
+  qt-6.10.3-corresponding-source.zip
+  m2cl-0.1.0-source.zip
+
+The first contains the unchanged Qt module source archives, license notices,
+source checksums and upstream SDK build configuration. The second contains
+the application's public source, resources and build scripts. Neither archive
+contains credentials, local game installations or the development toolchain.
+Run the preparation tool AFTER finalizing the source used for that binary:
+
+  python3 tools/prepare_source_bundles.py --source-cache /path/to/qt-source-cache
+
+The tool verifies every Qt archive before making the companion files. It uses
+the current non-ignored public working tree, so run it from the exact source
+snapshot being released. Include the generated SHA256SUMS file. Keep these
+sources available as required by the applicable licenses. This document is
+not a written offer to supply sources that have not actually been provided.
+
+UPSTREAM SOURCES (also recorded in sources.json)
+
+https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtbase-everywhere-src-6.10.3.tar.xz
+SHA-256: 383dc907816338f0cba72088a524c07458dfc69ce684ca9132fcc4fe91c24b0b
+
+https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtsvg-everywhere-src-6.10.3.tar.xz
+SHA-256: b3223fe005f6a4c7f21f34e4ee6ce0094737cff9503ba15bbb171ac18794f76d
+
+https://download.qt.io/archive/qt/6.10/6.10.3/submodules/qtimageformats-everywhere-src-6.10.3.tar.xz
+SHA-256: 84605dd91037482b5b7c7ecc5c27aee8acc1cd7f1fe77bc564777ddf365d7d28
+
+The source comparison against the official SDK's source SPDX checksums is
+recorded in components.json. Only release-stamp .tag differences are allowed;
+compiled source differences fail the notice collection tool. No Qt source
+patches were applied for this build. QT-BUILD-CONFIG.txt preserves the upstream
+SDK configuration; its /Users/qt paths refer to Qt's build infrastructure,
+not M2CL users or local accounts.
+
+REBUILDING AND USING MODIFIED QT
+
+M2CL does not impose a restriction on replacing Qt with an interface-compatible
+modified version, rebuilding/relinking M2CL with it, or reverse engineering for
+debugging such modifications as permitted by LGPLv3. Application source and
+resources are provided, so relinking does not require proprietary object files.
+
+For macOS, install Xcode command line tools, CMake 3.21+, Ninja and zlib. Unpack
+the three Qt source tar.xz files. In a separate build directory configure and
+build qtbase. Replace source/prefix placeholders with absolute paths:
+
+  /path/to/qtbase-everywhere-src-6.10.3/configure -prefix /path/to/modified-qt -opensource -confirm-license -release -framework -nomake examples -nomake tests
+  cmake --build . --parallel
+  cmake --install .
+
+For EACH of qtsvg and qtimageformats, use another empty build directory:
+
+  /path/to/modified-qt/bin/qt-configure-module /path/to/module-source
+  cmake --build . --parallel
+  cmake --install .
+
+Use an architecture compatible with the application (native arm64 on Apple
+Silicon, or x86_64 on Intel). Qt's distributed SDK is universal; its exact flags
+are in QT-BUILD-CONFIG.txt. A native rebuild is sufficient when rebuilding M2CL
+for the same native architecture. Consult Qt's source README for any additional
+platform toolchain prerequisites.
+
+To compile M2CL language catalogs, use a compatible Qt LinguistTools SDK as a
+host tool (or build qttools and its required development dependencies). Then
+configure M2CL against the modified Qt installation, NOT the original runtime:
+
+  cmake -S /path/to/m2cl-source -B /path/to/m2cl-custom-build -DCMAKE_PREFIX_PATH=/path/to/modified-qt -DMCLAUNCHER_QT_MAJOR=6 -DCMAKE_BUILD_TYPE=Release
+  cmake --build /path/to/m2cl-custom-build --parallel
+
+If LinguistTools was installed in a separate compatible SDK, additionally pass
+-DQt6LinguistTools_DIR=/path/to/host-sdk/lib/cmake/Qt6LinguistTools. That SDK's
+lupdate/lrelease may need its development dependencies installed; these are
+host tools, not extra libraries to bundle with the launcher.
+
+The result is m2cl-custom-build/m2cl.app. Run that rebuild directly, or deploy
+its matching frameworks and plugins using modified-qt/bin/macdeployqt. Qt
+frameworks live in Contents/Frameworks and plugins in Contents/PlugIns in a
+deployed application. Keep compatible libraries/plugins together. Replacing
+files in a signed bundle invalidates its signature; a local rebuilt copy can
+be signed with the user's own identity or an ad-hoc signature as appropriate.
+M2CL's current build does not enable hardened-runtime library validation or
+require a private vendor signing key to build and run a local modified copy.
+
+For Windows/Linux, follow docs/build-and-validation.md with the appropriate
+compiler and SDK. Their platform plugins/system dependencies and any runtime
+libraries copied into the final package must be inventoried separately. This
+macOS baseline is not an assertion that those packages have been audited.
+
+NOTICES AND TOOLS
+
+Complete LGPLv3 and GPLv3 are in LGPL-3.0.txt and GPL-3.0.txt. Original third-party
+notices are in original/ and THIRD-PARTY-NOTICES.txt. Source links/checksums are
+in sources.json; SDK dependencies are in components.json.
+
+To reproduce the notices with the matching official SDK and verified sources:
+
+  python3 tools/collect_qt_notices.py --qt-prefix /path/to/Qt/6.10.3/macos --source-cache /path/to/qt-source-cache
+
+This collection/preparation is explicit and offline; ordinary builds never
+download Qt sources automatically. See README.md in this directory for the
+Chinese summary and official Qt documentation links.

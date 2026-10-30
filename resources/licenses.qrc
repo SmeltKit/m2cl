@@ -4,5 +4,11 @@
     <file alias="ADDITIONAL_TERMS.md">../ADDITIONAL_TERMS.md</file>
     <file alias="NOTICE">../NOTICE</file>
     <file alias="md4c-LICENSE.md">../third_party/md4c/LICENSE.md</file>
+    <file alias="qt/README.md">../third_party/qt/README.md</file>
+    <file alias="qt/LGPL-3.0.txt">../third_party/qt/LGPL-3.0.txt</file>
+    <file alias="qt/GPL-3.0.txt">../third_party/qt/GPL-3.0.txt</file>
+    <file alias="qt/THIRD-PARTY-NOTICES.txt">../third_party/qt/THIRD-PARTY-NOTICES.txt</file>
+    <file alias="qt/SOURCE.txt">../third_party/qt/SOURCE.txt</file>
+    <file alias="qt/components.json">../third_party/qt/components.json</file>
   </qresource>
 </RCC>

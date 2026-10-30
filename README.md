@@ -1,14 +1,17 @@
-# M²CL · Mercury MC Launcher
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/branding/readme-banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/branding/readme-banner-light.svg">
+  <img src="assets/branding/readme-banner-light.svg" width="100%" alt="M²CL · Mercury MC Launcher — 跨平台 Minecraft: Java Edition 启动器">
+</picture>
 
-**简体中文** | [English](README.en.md)
-
-<img src="assets/branding/m2cl-128.png" width="80" height="80" alt="M²CL 图标">
+<p align="center"><strong>简体中文</strong> · <a href="README.en.md">English</a></p>
 
 一个使用 **C++17 / Qt Widgets** 开发的独立 Minecraft: Java Edition 桌面启动器。
 围绕游戏实例管理 Java、模组、光影和材质包，采用森林绿界面，支持浅色、深色和跟随系统。
-项目面向低配电脑设计，性能与兼容性仍在验证中。
+以跨平台和多架构兼容为目标，覆盖新旧 Windows、macOS 与 Linux；性能与兼容性仍在验证中。
 
-> **0.1.0 开发预览。** 界面支持简体中文、繁体中文和英文，默认跟随系统；语言设置重启后生效。
+> **0.1.0 早期开发预览。** 当前主要用于功能试用与反馈，界面、功能、配置格式及平台支持范围仍可能有较大调整。
+> 后续计划结合基础功能完善、微软 / Minecraft API 访问审核及真实账号验证的进展，推进较大版本更新；具体时间与范围尚未确定。
 > 微软账号流程已接入，但真实登录目前在 Minecraft 服务接口遇到 HTTP 403；
 > 本项目的 API 访问许可尚未确认，不能视为已支持可用的正版登录或已通过官方审核。
 > 当前开发版仍有无需微软登录的离线角色入口，送审发布版的身份与游戏资格门槛尚待调整。
@@ -30,12 +33,18 @@
 
 ## 平台与语言
 
-| 平台 | 开发验证状态 |
-| --- | --- |
-| macOS ARM64 | 已构建和运行；部分原版 / 加载器组合完成客户端初始化，完整游玩与微软登录仍待验收 |
-| Windows x64 | 已有构建、测试与部分安装记录；交互桌面、图形游戏和新账号后端仍待完整验收 |
-| Linux x64 | 已有构建、测试与部分安装记录；图形游戏和新账号后端仍待完整验收 |
-| 其他架构 / 旧系统 | 尚未验收；不能把 Qt 5 构建入口视为已支持旧 Windows 或 32 位系统 |
+以下为**计划支持的平台与架构**，兼容性仍在逐项验证：
+
+| 平台 | 目标架构 | 当前验证状态 |
+| --- | --- | --- |
+| Windows 7 SP1 / 8 / 8.1 | x86（32 位）、x64（64 位） | 采用 Qt 5 兼容路线；待对应系统与架构上的实际运行验证 |
+| Windows 10 | x86（32 位）、x64（64 位） | 已有 Windows x64 构建、测试与部分安装记录；系统版本及 x86 仍待分别验收 |
+| Windows 11 | x64、ARM64 | 已有 Windows x64 构建、测试与部分安装记录；ARM64 原生构建与运行待验证 |
+| macOS | Intel x64、Apple Silicon ARM64 | ARM64 已构建和运行，部分游戏组合完成客户端初始化；Intel 与最低系统版本待验证 |
+| Linux | x64；ARM64 为补充目标 | x64 已完成 Qt 5 / Qt 6 构建与离线测试；发行版、图形游戏及 ARM64 仍待验证 |
+
+启动器、Java、Minecraft 与加载器的兼容范围分别验证；旧系统与 32 位支持目标不代表所有游戏版本都能运行。
+完整游玩与微软登录仍待验收。
 
 在「设置 → 通用与外观 → 界面语言」中选择语言，重启启动器后生效。
 未知系统语言回退英文，繁体中文系统使用繁体；项目介绍、实例名称、版本标识和游戏日志保留原文。
@@ -43,10 +52,11 @@
 
 ## 构建与运行
 
-需要 CMake 3.21+、C++17 编译器、zlib 和 Qt 6.5+：Core、Widgets、Network、Concurrent、Svg；
+需要 CMake 3.21+、C++17 编译器、zlib，以及 **Qt 5.15+ 或 Qt 6.5+**：Core、Widgets、Network、Concurrent、Svg；
 翻译构建需要 LinguistTools，测试另外需要 Qt Test。读取 WebP 需要部署 Qt Image Formats 的 WebP 插件。
 
-将 `/path/to/Qt` 替换为本机 Qt SDK 的安装前缀：
+以下示例使用 Qt 6。将 `/path/to/Qt` 替换为本机 Qt SDK 的安装前缀；
+使用 Qt 5 时选择对应的 Qt 5 SDK，并将 `MCLAUNCHER_QT_MAJOR=6` 改为 `MCLAUNCHER_QT_MAJOR=5`。
 
 ```sh
 cmake -S . -B build -DCMAKE_PREFIX_PATH="/path/to/Qt" -DMCLAUNCHER_QT_MAJOR=6 -DCMAKE_BUILD_TYPE=Release
@@ -60,7 +70,8 @@ ctest --test-dir build -C Release --output-on-failure
 - Linux：`build/m2cl`
 - Windows：`build/Release/m2cl.exe`，或单配置构建的 `build/m2cl.exe`
 
-源码中保留 Qt 5.15 构建选择器，但尚未完成该工具链的编译与兼容验证。
+Qt 5.15.19 已在 Linux x64 完成构建、离线测试和界面启动检查；
+Windows 7/8.1 与 x86 仍需对应编译器、Qt 包和系统上的单独验收。
 当前开发包也未完成独立部署、签名及安装器验收；仅复制可执行文件不能替代 Qt 插件部署。
 构建、测试和部署说明见[构建指南](docs/build-and-validation.md)。
 
@@ -76,6 +87,8 @@ ctest --test-dir build -C Release --output-on-failure
 ## 接下来的工作
 
 - 准备符合官方要求的账号与游戏资格验证流程，申请 API 访问并完成真实登录 / 启动验收。
+- 完整首版后申请本项目的 CurseForge API Key，接入资源搜索、详情、版本筛选与下载。
+- 增加按实例的存档管理：世界列表与版本信息、导入 / 导出、复制、备份与恢复。
 - 持续校对三种语言的术语、长文本，以及 Windows / Linux 字体布局。
 - 扩展模组与光影兼容性验证、旧加载器支持，以及 Windows / Linux 图形验收。
 - 整合包导入、下载暂停与持久恢复、独立发布包与性能测量。
@@ -95,4 +108,8 @@ Copyright (C) 2026 **ppm203**。
 附加条款不禁止 Fork、商业分发或加入广告，也不要求保留固定 Logo、链接或界面布局。
 
 第三方组件继续使用各自的许可证，MD4C 的 MIT 声明保留在[原文件](third_party/md4c/LICENSE.md)。
+
+Qt 动态库按 LGPLv3 使用，完整许可与第三方声明见 [Qt 许可材料](third_party/qt/README.md)。
+“关于 → 许可证与署名”可离线查看；发布时另附对应的 Qt 和 M²CL 源码压缩包，
+准备方式见[构建说明](docs/build-and-validation.md#distribution)。
 M²CL 是独立项目，与 Mojang Studios、Microsoft 无官方隶属或合作关系。

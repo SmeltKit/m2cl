@@ -609,6 +609,8 @@ QWidget *MainWindow::settingsPage() {
     infoLayout->addWidget(label(QStringLiteral("Mercury MC Launcher"),"applicationFullName"));
     infoLayout->addWidget(label(QCoreApplication::translate("M2CL", "M²CL 0.1.0 开发预览 · 原版安装、实例资源与 Java 管理。微软登录尚在联调。"), nullptr, true));
     auto attribution=label(QCoreApplication::translate("M2CL", "原项目作者：ppm203 · Copyright © 2026 ppm203"));attribution->setObjectName("aboutProjectAttribution");infoLayout->addWidget(attribution);
+    auto qtNotice=label(QCoreApplication::translate("M2CL", "本程序使用 Qt %1 · LGPLv3\nCopyright © The Qt Company Ltd. 及其他贡献者。完整许可与对应源码说明见下方。"),nullptr,true);
+    qtNotice->setText(qtNotice->text().arg(QString::fromLatin1(qVersion())));qtNotice->setObjectName("aboutQtNotice");infoLayout->addWidget(qtNotice);
     infoLayout->addWidget(label(QCoreApplication::translate("M2CL", "GNU GPL 第 3 版 + 第 7 节附加条款 · 不提供担保。第三方修改版须保留合理署名并明确区分来源。"),nullptr,true));
     auto legal=new QPushButton(QCoreApplication::translate("M2CL", "许可证与署名"));legal->setObjectName("showProjectLicenses");infoLayout->addWidget(legal,0,Qt::AlignLeft);
     connect(legal,&QPushButton::clicked,this,[this]{ProjectLegalDialog dialog(this);dialog.exec();});

@@ -47,7 +47,7 @@ void SelectBox::showPopup() {
     auto body=new QVBoxLayout(popup);body->setContentsMargins(7,7,7,7);body->setSpacing(7);
     const auto mode=property("popupMode").toString();
     const bool versions=mode=="versions",grouped=mode=="loaders";
-    const bool clearChoice=(versions||grouped)&&itemData(0).metaType().id()==QMetaType::QString && itemData(0).toString().isEmpty();
+    const bool clearChoice=(versions||grouped)&&itemData(0).userType()==QMetaType::QString && itemData(0).toString().isEmpty();
     auto choose=[this](int row){
         if(row<0 || row>=count() || !(model()->flags(model()->index(row,modelColumn()))&Qt::ItemIsEnabled))return;
         setCurrentIndex(row);emit activated(row);emit textActivated(itemText(row));hidePopup();

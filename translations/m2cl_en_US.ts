@@ -90,7 +90,7 @@
     <message>
         <location line="+1"/>
         <location filename="../src/core/gameplan.cpp" line="+120"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+257"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+259"/>
         <source>原版</source>
         <translation>Vanilla</translation>
     </message>
@@ -1140,7 +1140,7 @@ Inactive macOS pages may not be fully reclaimable; this is only a conservative a
     <message>
         <location line="+6"/>
         <location filename="../src/ui/accountspanel.cpp" line="+71"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-478"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-480"/>
         <source>离线角色</source>
         <translation>Offline player</translation>
     </message>
@@ -1162,7 +1162,7 @@ Inactive macOS pages may not be fully reclaimable; this is only a conservative a
     <message>
         <location line="+4"/>
         <location line="+1"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+567"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+569"/>
         <source>请先完成当前账号操作</source>
         <translation>Finish the current account operation first</translation>
     </message>
@@ -1285,7 +1285,7 @@ Inactive macOS pages may not be fully reclaimable; this is only a conservative a
     <message>
         <location line="+21"/>
         <location filename="../src/network/optifine.cpp" line="+173"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-320"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-322"/>
         <location filename="../src/ui/versioncomponentsdialog.cpp" line="+10"/>
         <source>官方源</source>
         <translation>Official</translation>
@@ -2077,7 +2077,7 @@ Inactive macOS pages may not be fully reclaimable; this is only a conservative a
     <message>
         <location line="+2"/>
         <location line="+2"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+23"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+25"/>
         <source>失败</source>
         <translation>Failed</translation>
     </message>
@@ -2713,18 +2713,18 @@ Try another download source or select a local installer.</translation>
         <location line="+0"/>
         <location filename="../src/ui/instancemods.cpp" line="+145"/>
         <location line="+57"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-168"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-170"/>
         <location line="+12"/>
-        <location line="+266"/>
+        <location line="+268"/>
         <location line="+98"/>
         <source>加载器</source>
         <translation>Loader</translation>
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-381"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-383"/>
         <location line="+17"/>
-        <location line="+265"/>
+        <location line="+267"/>
         <location filename="../src/ui/modversionview.cpp" line="-85"/>
         <source>游戏版本</source>
         <translation>Game version</translation>
@@ -2856,8 +2856,8 @@ Try another download source or select a local installer.</translation>
         <location line="+6"/>
         <location filename="../src/ui/instancepacks.cpp" line="+56"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="+263"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-868"/>
-        <location line="+516"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-870"/>
+        <location line="+518"/>
         <location line="+87"/>
         <location line="+110"/>
         <location line="+38"/>
@@ -2899,7 +2899,7 @@ Try another download source or select a local installer.</translation>
     </message>
     <message>
         <location line="+7"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-630"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-632"/>
         <source>账号管理</source>
         <translation>Accounts</translation>
     </message>
@@ -3056,7 +3056,7 @@ Try another download source or select a local installer.</translation>
     </message>
     <message>
         <location filename="../src/ui/installplandialog.cpp" line="+47"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+627"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+629"/>
         <source>确认安装方案</source>
         <translation>Confirm installation plan</translation>
     </message>
@@ -3073,7 +3073,7 @@ Try another download source or select a local installer.</translation>
     <message>
         <location line="+5"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="-95"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-597"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-599"/>
         <source>添加模组</source>
         <translation>Add mods</translation>
     </message>
@@ -3084,7 +3084,7 @@ Try another download source or select a local installer.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+827"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+829"/>
         <source>浏览模组市场</source>
         <translation>Browse mod market</translation>
     </message>
@@ -3106,15 +3106,15 @@ Try another download source or select a local installer.</translation>
         <location line="+1"/>
         <location line="+150"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="-387"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-329"/>
-        <location line="+361"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-331"/>
+        <location line="+363"/>
         <source>打开目录</source>
         <translation>Open folder</translation>
     </message>
     <message>
         <location line="-148"/>
         <location line="+19"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-580"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-582"/>
         <location line="+270"/>
         <location filename="../src/ui/modplanview.cpp" line="-40"/>
         <source>模组</source>
@@ -3251,7 +3251,7 @@ No automatic retry within 24 hours. You can retry manually.</translation>
     <message>
         <location line="+9"/>
         <location line="+100"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+302"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+304"/>
         <source>管理版本组件</source>
         <translation>Manage version components</translation>
     </message>
@@ -3514,7 +3514,7 @@ Shader files are not enabled automatically; select them in the game.</translatio
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-586"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-588"/>
         <source>更多操作</source>
         <translation>More actions</translation>
     </message>
@@ -3596,7 +3596,7 @@ Import local files or browse the resource market</translation>
         <location filename="../src/ui/javamanager.cpp" line="+273"/>
         <location line="+8"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="+494"/>
-        <location filename="../src/ui/projectlegal.cpp" line="+60"/>
+        <location filename="../src/ui/projectlegal.cpp" line="+88"/>
         <location filename="../src/ui/versioncomponentsdialog.cpp" line="-60"/>
         <source>关闭</source>
         <translation>Close</translation>
@@ -4128,7 +4128,7 @@ Game default: Java %1; you may select a newer version manually</translation>
     </message>
     <message>
         <location line="+26"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+105"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+107"/>
         <source>设置保存失败：%1</source>
         <translation>Could not save settings: %1</translation>
     </message>
@@ -4362,7 +4362,7 @@ Install Vanilla or add an existing game folder to start your adventure.</transla
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-123"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-125"/>
         <source>跟随系统</source>
         <translation>System</translation>
     </message>
@@ -4451,7 +4451,7 @@ Install Vanilla or add an existing game folder to start your adventure.</transla
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+372"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+374"/>
         <source>最大内存</source>
         <translation>Maximum memory</translation>
     </message>
@@ -4599,27 +4599,27 @@ Install Vanilla or add an existing game folder to start your adventure.</transla
         <translation>Only restores automatic maximum memory and default initial memory; other settings remain unchanged</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="-779"/>
-        <location line="+1068"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-781"/>
+        <location line="+1070"/>
         <source>开始</source>
         <translation>Home</translation>
     </message>
     <message>
-        <location line="-1068"/>
+        <location line="-1070"/>
         <location line="+238"/>
-        <location line="+830"/>
+        <location line="+832"/>
         <source>游戏库</source>
         <translation>Library</translation>
     </message>
     <message>
-        <location line="-1068"/>
+        <location line="-1070"/>
         <location line="+381"/>
-        <location line="+687"/>
+        <location line="+689"/>
         <source>设置</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location line="-1046"/>
+        <location line="-1048"/>
         <source>准备就绪</source>
         <translation>Ready</translation>
     </message>
@@ -4657,12 +4657,12 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     </message>
     <message>
         <location line="+14"/>
-        <location line="+527"/>
+        <location line="+529"/>
         <source>实例配置保存失败</source>
         <translation>Could not save instance configuration</translation>
     </message>
     <message>
-        <location line="-524"/>
+        <location line="-526"/>
         <source>启动前兼容性提醒</source>
         <translation>Compatibility notice before launch</translation>
     </message>
@@ -4694,12 +4694,12 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     <message>
         <location line="+7"/>
         <location line="+230"/>
-        <location line="+595"/>
+        <location line="+597"/>
         <source>全部分类</source>
         <translation>All categories</translation>
     </message>
     <message>
-        <location line="-821"/>
+        <location line="-823"/>
         <location line="+192"/>
         <location filename="../src/ui/modversionview.cpp" line="+1"/>
         <source>全部版本</source>
@@ -4810,12 +4810,12 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     </message>
     <message>
         <location line="+19"/>
-        <location line="+305"/>
+        <location line="+307"/>
         <source>把世界放进书桌</source>
         <translation>A world on your desktop</translation>
     </message>
     <message>
-        <location line="-303"/>
+        <location line="-305"/>
         <source>你的方块世界</source>
         <translation>Your block world</translation>
     </message>
@@ -4828,42 +4828,42 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     </message>
     <message>
         <location line="-20"/>
-        <location line="+312"/>
+        <location line="+314"/>
         <source>编辑实例</source>
         <translation>Edit instance</translation>
     </message>
     <message>
-        <location line="-305"/>
-        <location line="+288"/>
+        <location line="-307"/>
+        <location line="+290"/>
         <source>安装原版或添加已有目录，开启你的下一段冒险。</source>
         <translation>Install Vanilla or add an existing folder to begin your next adventure.</translation>
     </message>
     <message>
-        <location line="-286"/>
+        <location line="-288"/>
         <source>我的实例</source>
         <translation>My instances</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+8"/>
-        <location line="+277"/>
+        <location line="+279"/>
         <source>安装原版</source>
         <translation>Install Vanilla</translation>
     </message>
     <message>
-        <location line="-275"/>
+        <location line="-277"/>
         <source>刷新实例</source>
         <translation>Refresh instances</translation>
     </message>
     <message>
         <location line="+3"/>
-        <location line="+306"/>
+        <location line="+308"/>
         <location line="+25"/>
         <source>游戏目录</source>
         <translation>Game folders</translation>
     </message>
     <message>
-        <location line="-330"/>
+        <location line="-332"/>
         <source>管理目录</source>
         <translation>Manage folders</translation>
     </message>
@@ -4879,19 +4879,19 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     </message>
     <message>
         <location line="+3"/>
-        <location line="+265"/>
+        <location line="+267"/>
         <source>添加已有 .minecraft 目录，识别本地游戏实例。</source>
         <translation>Add an existing .minecraft folder to find local game instances.</translation>
     </message>
     <message>
-        <location line="-258"/>
-        <location line="+657"/>
+        <location line="-260"/>
+        <location line="+659"/>
         <location line="+152"/>
         <source>模组市场</source>
         <translation>Mod market</translation>
     </message>
     <message>
-        <location line="-809"/>
+        <location line="-811"/>
         <source>返回实例</source>
         <translation>Back to instance</translation>
     </message>
@@ -5040,12 +5040,19 @@ Click Install or Launch again to retry. Verified files will be reused.</translat
     </message>
     <message>
         <location line="+1"/>
+        <source>本程序使用 Qt %1 · LGPLv3
+Copyright © The Qt Company Ltd. 及其他贡献者。完整许可与对应源码说明见下方。</source>
+        <translation>This application uses Qt %1 · LGPLv3
+Copyright © The Qt Company Ltd. and other contributors. Full licenses and corresponding source instructions are available below.</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>GNU GPL 第 3 版 + 第 7 节附加条款 · 不提供担保。第三方修改版须保留合理署名并明确区分来源。</source>
         <translation>GNU GPL version 3 + section 7 additional terms · No warranty. Third-party modifications must preserve reasonable attribution and clearly identify their origin.</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../src/ui/projectlegal.cpp" line="-39"/>
+        <location filename="../src/ui/projectlegal.cpp" line="-59"/>
         <source>许可证与署名</source>
         <translation>Licenses &amp; attribution</translation>
     </message>
@@ -6040,11 +6047,12 @@ Original project author: ppm203 · Copyright © 2026 ppm203</translation>
     </message>
     <message>
         <location line="+1"/>
+        <location line="+21"/>
         <source>GPLv3 全文</source>
         <translation>Full GPLv3</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-20"/>
         <source>附加条款</source>
         <translation>Additional terms</translation>
     </message>
@@ -6054,7 +6062,37 @@ Original project author: ppm203 · Copyright © 2026 ppm203</translation>
         <translation>Third party · MD4C</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+16"/>
+        <source>Qt 许可文档</source>
+        <translation>Qt legal documents</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 声明与使用说明</source>
+        <translation>Qt notices and usage</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>LGPLv3 全文</source>
+        <translation>Full LGPLv3 text</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Qt 第三方版权与许可</source>
+        <translation>Qt third-party copyrights and licenses</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 对应源码与替换说明</source>
+        <translation>Qt corresponding source and replacement</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 组件清单</source>
+        <translation>Qt component inventory</translation>
+    </message>
+    <message>
+        <location line="-51"/>
         <source>随附许可证文件读取失败，请查看发行包的 licenses 目录。</source>
         <translation>Cannot read bundled license files. Check the distribution&apos;s licenses folder.</translation>
     </message>
@@ -6274,7 +6312,7 @@ Request: </translation>
         <translation>Cannot import installer</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="-661"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-663"/>
         <location line="+2"/>
         <source>界面语言</source>
         <translation>Interface language</translation>
@@ -6334,7 +6372,7 @@ Request: </translation>
     <message numerus="yes">
         <location filename="../src/ui/mainwindow.cpp" line="+186"/>
         <location line="+8"/>
-        <location line="+260"/>
+        <location line="+262"/>
         <source>%n 个实例</source>
         <translation>
             <numerusform>%n instance</numerusform>

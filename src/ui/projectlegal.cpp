@@ -4,6 +4,7 @@
 
 #include <QCoreApplication>
 #include "projectlegal.h"
+#include "launcherwidgets.h"
 #include <QApplication>
 #include <QDialogButtonBox>
 #include <QFile>
@@ -15,6 +16,13 @@
 
 // Explicit reference keeps this resource object when launcher_ui is statically linked.
 static void initializeLegalResources() { Q_INIT_RESOURCE(licenses); }
+static void loadLegalDocument(QPlainTextEdit *text, const QString &path) {
+    QFile file(path);
+    text->setPlainText(file.open(QIODevice::ReadOnly)
+                          ? QString::fromUtf8(file.readAll())
+                          : QCoreApplication::translate("M2CL", "随附许可证文件读取失败，请查看发行包的 licenses 目录。"));
+    text->moveCursor(QTextCursor::Start);
+}
 
 namespace mc {
 ProjectLegalDialog::ProjectLegalDialog(QWidget *parent)
@@ -49,12 +57,32 @@ ProjectLegalDialog::ProjectLegalDialog(QWidget *parent)
         text->setReadOnly(true);
         text->setFont(QApplication::font());
         text->setLineWrapMode(QPlainTextEdit::WidgetWidth);
-        QFile file(QString::fromLatin1(document.path));
-        text->setPlainText(file.open(QIODevice::ReadOnly)
-                              ? QString::fromUtf8(file.readAll())
-                              : QCoreApplication::translate("M2CL", "随附许可证文件读取失败，请查看发行包的 licenses 目录。"));
+        loadLegalDocument(text, QString::fromLatin1(document.path));
         tabs->addTab(text, QCoreApplication::translate("M2CL", document.title));
     }
+    auto qtPage = new QWidget;
+    auto qtLayout = new QVBoxLayout(qtPage);
+    qtLayout->setContentsMargins(0, 0, 0, 0);
+    auto selector = new SelectBox;
+    selector->setObjectName("qtLegalDocument");
+    selector->setAccessibleName(QCoreApplication::translate("M2CL", "Qt 许可文档"));
+    selector->addItem(QCoreApplication::translate("M2CL", "Qt 声明与使用说明"), ":/legal/qt/README.md");
+    selector->addItem(QCoreApplication::translate("M2CL", "LGPLv3 全文"), ":/legal/qt/LGPL-3.0.txt");
+    selector->addItem(QCoreApplication::translate("M2CL", "GPLv3 全文"), ":/legal/qt/GPL-3.0.txt");
+    selector->addItem(QCoreApplication::translate("M2CL", "Qt 第三方版权与许可"), ":/legal/qt/THIRD-PARTY-NOTICES.txt");
+    selector->addItem(QCoreApplication::translate("M2CL", "Qt 对应源码与替换说明"), ":/legal/qt/SOURCE.txt");
+    selector->addItem(QCoreApplication::translate("M2CL", "Qt 组件清单"), ":/legal/qt/components.json");
+    auto qtText = new QPlainTextEdit;
+    qtText->setObjectName("qtLegalText");
+    qtText->setReadOnly(true);
+    qtText->setFont(QApplication::font());
+    qtText->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+    connect(selector, qOverload<int>(&QComboBox::currentIndexChanged), qtText,
+            [selector, qtText] { loadLegalDocument(qtText, selector->currentData().toString()); });
+    loadLegalDocument(qtText, selector->currentData().toString());
+    qtLayout->addWidget(selector);
+    qtLayout->addWidget(qtText, 1);
+    tabs->addTab(qtPage, QStringLiteral("Qt"));
     content->addWidget(tabs, 1);
     auto buttons = new QDialogButtonBox;
     auto close = buttons->addButton(QCoreApplication::translate("M2CL", "关闭"), QDialogButtonBox::RejectRole);

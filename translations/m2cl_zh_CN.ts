@@ -90,7 +90,7 @@
     <message>
         <location line="+1"/>
         <location filename="../src/core/gameplan.cpp" line="+120"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+257"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+259"/>
         <source>原版</source>
         <translation>原版</translation>
     </message>
@@ -1140,7 +1140,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+6"/>
         <location filename="../src/ui/accountspanel.cpp" line="+71"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-478"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-480"/>
         <source>离线角色</source>
         <translation>离线角色</translation>
     </message>
@@ -1162,7 +1162,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+4"/>
         <location line="+1"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+567"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+569"/>
         <source>请先完成当前账号操作</source>
         <translation>请先完成当前账号操作</translation>
     </message>
@@ -1285,7 +1285,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+21"/>
         <location filename="../src/network/optifine.cpp" line="+173"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-320"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-322"/>
         <location filename="../src/ui/versioncomponentsdialog.cpp" line="+10"/>
         <source>官方源</source>
         <translation>官方源</translation>
@@ -2077,7 +2077,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+2"/>
         <location line="+2"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+23"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+25"/>
         <source>失败</source>
         <translation>失败</translation>
     </message>
@@ -2713,18 +2713,18 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <location line="+0"/>
         <location filename="../src/ui/instancemods.cpp" line="+145"/>
         <location line="+57"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-168"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-170"/>
         <location line="+12"/>
-        <location line="+266"/>
+        <location line="+268"/>
         <location line="+98"/>
         <source>加载器</source>
         <translation>加载器</translation>
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-381"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-383"/>
         <location line="+17"/>
-        <location line="+265"/>
+        <location line="+267"/>
         <location filename="../src/ui/modversionview.cpp" line="-85"/>
         <source>游戏版本</source>
         <translation>游戏版本</translation>
@@ -2856,8 +2856,8 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <location line="+6"/>
         <location filename="../src/ui/instancepacks.cpp" line="+56"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="+263"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-868"/>
-        <location line="+516"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-870"/>
+        <location line="+518"/>
         <location line="+87"/>
         <location line="+110"/>
         <location line="+38"/>
@@ -2899,7 +2899,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+7"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-630"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-632"/>
         <source>账号管理</source>
         <translation>账号管理</translation>
     </message>
@@ -3056,7 +3056,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location filename="../src/ui/installplandialog.cpp" line="+47"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+627"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+629"/>
         <source>确认安装方案</source>
         <translation>确认安装方案</translation>
     </message>
@@ -3073,7 +3073,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+5"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="-95"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-597"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-599"/>
         <source>添加模组</source>
         <translation>添加模组</translation>
     </message>
@@ -3084,7 +3084,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+827"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+829"/>
         <source>浏览模组市场</source>
         <translation>浏览模组市场</translation>
     </message>
@@ -3106,15 +3106,15 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <location line="+1"/>
         <location line="+150"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="-387"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-329"/>
-        <location line="+361"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-331"/>
+        <location line="+363"/>
         <source>打开目录</source>
         <translation>打开目录</translation>
     </message>
     <message>
         <location line="-148"/>
         <location line="+19"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-580"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-582"/>
         <location line="+270"/>
         <location filename="../src/ui/modplanview.cpp" line="-40"/>
         <source>模组</source>
@@ -3251,7 +3251,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+9"/>
         <location line="+100"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+302"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+304"/>
         <source>管理版本组件</source>
         <translation>管理版本组件</translation>
     </message>
@@ -3514,7 +3514,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-586"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-588"/>
         <source>更多操作</source>
         <translation>更多操作</translation>
     </message>
@@ -3596,7 +3596,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <location filename="../src/ui/javamanager.cpp" line="+273"/>
         <location line="+8"/>
         <location filename="../src/ui/launcherwidgets.cpp" line="+494"/>
-        <location filename="../src/ui/projectlegal.cpp" line="+60"/>
+        <location filename="../src/ui/projectlegal.cpp" line="+88"/>
         <location filename="../src/ui/versioncomponentsdialog.cpp" line="-60"/>
         <source>关闭</source>
         <translation>关闭</translation>
@@ -4128,7 +4128,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+26"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+105"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+107"/>
         <source>设置保存失败：%1</source>
         <translation>设置保存失败：%1</translation>
     </message>
@@ -4362,7 +4362,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+0"/>
-        <location filename="../src/ui/mainwindow.cpp" line="-123"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-125"/>
         <source>跟随系统</source>
         <translation>跟随系统</translation>
     </message>
@@ -4451,7 +4451,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+2"/>
-        <location filename="../src/ui/mainwindow.cpp" line="+372"/>
+        <location filename="../src/ui/mainwindow.cpp" line="+374"/>
         <source>最大内存</source>
         <translation>最大内存</translation>
     </message>
@@ -4599,27 +4599,27 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <translation>仅恢复自动内存与默认初始内存，其他设置保持不变</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="-779"/>
-        <location line="+1068"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-781"/>
+        <location line="+1070"/>
         <source>开始</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location line="-1068"/>
+        <location line="-1070"/>
         <location line="+238"/>
-        <location line="+830"/>
+        <location line="+832"/>
         <source>游戏库</source>
         <translation>游戏库</translation>
     </message>
     <message>
-        <location line="-1068"/>
+        <location line="-1070"/>
         <location line="+381"/>
-        <location line="+687"/>
+        <location line="+689"/>
         <source>设置</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location line="-1046"/>
+        <location line="-1048"/>
         <source>准备就绪</source>
         <translation>准备就绪</translation>
     </message>
@@ -4657,12 +4657,12 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+14"/>
-        <location line="+527"/>
+        <location line="+529"/>
         <source>实例配置保存失败</source>
         <translation>实例配置保存失败</translation>
     </message>
     <message>
-        <location line="-524"/>
+        <location line="-526"/>
         <source>启动前兼容性提醒</source>
         <translation>启动前兼容性提醒</translation>
     </message>
@@ -4694,12 +4694,12 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message>
         <location line="+7"/>
         <location line="+230"/>
-        <location line="+595"/>
+        <location line="+597"/>
         <source>全部分类</source>
         <translation>全部分类</translation>
     </message>
     <message>
-        <location line="-821"/>
+        <location line="-823"/>
         <location line="+192"/>
         <location filename="../src/ui/modversionview.cpp" line="+1"/>
         <source>全部版本</source>
@@ -4810,12 +4810,12 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+19"/>
-        <location line="+305"/>
+        <location line="+307"/>
         <source>把世界放进书桌</source>
         <translation>把世界放进书桌</translation>
     </message>
     <message>
-        <location line="-303"/>
+        <location line="-305"/>
         <source>你的方块世界</source>
         <translation>你的方块世界</translation>
     </message>
@@ -4828,42 +4828,42 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="-20"/>
-        <location line="+312"/>
+        <location line="+314"/>
         <source>编辑实例</source>
         <translation>编辑实例</translation>
     </message>
     <message>
-        <location line="-305"/>
-        <location line="+288"/>
+        <location line="-307"/>
+        <location line="+290"/>
         <source>安装原版或添加已有目录，开启你的下一段冒险。</source>
         <translation>安装原版或添加已有目录，开启你的下一段冒险。</translation>
     </message>
     <message>
-        <location line="-286"/>
+        <location line="-288"/>
         <source>我的实例</source>
         <translation>我的实例</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+8"/>
-        <location line="+277"/>
+        <location line="+279"/>
         <source>安装原版</source>
         <translation>安装原版</translation>
     </message>
     <message>
-        <location line="-275"/>
+        <location line="-277"/>
         <source>刷新实例</source>
         <translation>刷新实例</translation>
     </message>
     <message>
         <location line="+3"/>
-        <location line="+306"/>
+        <location line="+308"/>
         <location line="+25"/>
         <source>游戏目录</source>
         <translation>游戏目录</translation>
     </message>
     <message>
-        <location line="-330"/>
+        <location line="-332"/>
         <source>管理目录</source>
         <translation>管理目录</translation>
     </message>
@@ -4879,19 +4879,19 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+3"/>
-        <location line="+265"/>
+        <location line="+267"/>
         <source>添加已有 .minecraft 目录，识别本地游戏实例。</source>
         <translation>添加已有 .minecraft 目录，识别本地游戏实例。</translation>
     </message>
     <message>
-        <location line="-258"/>
-        <location line="+657"/>
+        <location line="-260"/>
+        <location line="+659"/>
         <location line="+152"/>
         <source>模组市场</source>
         <translation>模组市场</translation>
     </message>
     <message>
-        <location line="-809"/>
+        <location line="-811"/>
         <source>返回实例</source>
         <translation>返回实例</translation>
     </message>
@@ -5040,12 +5040,19 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+1"/>
+        <source>本程序使用 Qt %1 · LGPLv3
+Copyright © The Qt Company Ltd. 及其他贡献者。完整许可与对应源码说明见下方。</source>
+        <translation>本程序使用 Qt %1 · LGPLv3
+Copyright © The Qt Company Ltd. 及其他贡献者。完整许可与对应源码说明见下方。</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>GNU GPL 第 3 版 + 第 7 节附加条款 · 不提供担保。第三方修改版须保留合理署名并明确区分来源。</source>
         <translation>GNU GPL 第 3 版 + 第 7 节附加条款 · 不提供担保。第三方修改版须保留合理署名并明确区分来源。</translation>
     </message>
     <message>
         <location line="+1"/>
-        <location filename="../src/ui/projectlegal.cpp" line="-39"/>
+        <location filename="../src/ui/projectlegal.cpp" line="-59"/>
         <source>许可证与署名</source>
         <translation>许可证与署名</translation>
     </message>
@@ -6040,11 +6047,12 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     </message>
     <message>
         <location line="+1"/>
+        <location line="+21"/>
         <source>GPLv3 全文</source>
         <translation>GPLv3 全文</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-20"/>
         <source>附加条款</source>
         <translation>附加条款</translation>
     </message>
@@ -6054,7 +6062,37 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <translation>第三方 · MD4C</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+16"/>
+        <source>Qt 许可文档</source>
+        <translation>Qt 许可文档</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 声明与使用说明</source>
+        <translation>Qt 声明与使用说明</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>LGPLv3 全文</source>
+        <translation>LGPLv3 全文</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Qt 第三方版权与许可</source>
+        <translation>Qt 第三方版权与许可</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 对应源码与替换说明</source>
+        <translation>Qt 对应源码与替换说明</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Qt 组件清单</source>
+        <translation>Qt 组件清单</translation>
+    </message>
+    <message>
+        <location line="-51"/>
         <source>随附许可证文件读取失败，请查看发行包的 licenses 目录。</source>
         <translation>随附许可证文件读取失败，请查看发行包的 licenses 目录。</translation>
     </message>
@@ -6274,7 +6312,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
         <translation>无法导入安装包</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="-661"/>
+        <location filename="../src/ui/mainwindow.cpp" line="-663"/>
         <location line="+2"/>
         <source>界面语言</source>
         <translation>界面语言</translation>
@@ -6334,7 +6372,7 @@ macOS 非活跃页面不保证全部可回收，此值仅为保守分配的参�
     <message numerus="yes">
         <location filename="../src/ui/mainwindow.cpp" line="+186"/>
         <location line="+8"/>
-        <location line="+260"/>
+        <location line="+262"/>
         <source>%n 个实例</source>
         <translation>
             <numerusform>%n 个实例</numerusform>

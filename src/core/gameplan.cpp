@@ -148,7 +148,7 @@ LaunchCommand gameCommand(const QJsonObject &m,const GamePlan &plan,const QStrin
         const auto o=v.toObject();if(!rulesAllow(o.value("rules").toArray(),platform))continue;
         const auto value=o.value("value");if(value.isString())result.append(expand(value.toString()));else for(const auto &part:value.toArray())result.append(expand(part.toString()));
     }}return result;};
-    LaunchCommand result;result.online=identity.microsoft;if(result.online)result.redactionSecrets={identity.accessToken};result.executable=java;result.directory=directory;result.arguments<<QString("-Xmx%1M").arg(memory)<<"-Dfile.encoding=UTF-8";
+    LaunchCommand result;result.online=identity.microsoft;if(result.online)result.redactionSecrets=QStringList{identity.accessToken};result.executable=java;result.directory=directory;result.arguments<<QString("-Xmx%1M").arg(memory)<<"-Dfile.encoding=UTF-8";
     if(options.minMemoryMiB>0)result.arguments<<QString("-Xms%1M").arg(options.minMemoryMiB);
     const auto arguments=m.value("arguments").toObject();
     if(arguments.contains("jvm"))result.arguments+=args(arguments.value("jvm").toArray());

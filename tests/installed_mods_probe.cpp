@@ -41,7 +41,7 @@ int main(int argc,char **argv){
         for(const auto &mod:mods)qInfo().noquote()<<"Actual JAR:"<<mod.name<<mod.version<<"local icon bytes:"<<mc::localModIcon(instancePath+"/mods/"+mod.fileName,mod).size();
         for(const auto &mod:mods)if(mod.id=="lithium"){const auto error=mc::setModEnabled(instance,mod.fileName,false);if(!error.isEmpty()){qCritical()<<error;return 1;}}
     }catch(const std::exception &error){qCritical()<<error.what();return 1;}
-    mc::Settings settings;settings.gameRoots={root};settings.selectedInstance=instancePath;settings.instanceNames.insert(instancePath,QStringLiteral("模组管理 · 实测实例"));settings.appearance="light";
+    mc::Settings settings;settings.gameRoots=QStringList{root};settings.selectedInstance=instancePath;settings.instanceNames.insert(instancePath,QStringLiteral("模组管理 · 实测实例"));settings.appearance="light";
     mc::SettingsStore store(temporary.path()+"/settings");if(!store.save(settings))return 2;
     mc::MainWindow window(store);window.resize(1280,800);window.setAppearance("light","forest");window.show();
     auto wait=new QTimer(&window);wait->setInterval(100);

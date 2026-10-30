@@ -1,15 +1,18 @@
-# M²CL · Mercury MC Launcher
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/branding/readme-banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/branding/readme-banner-light.svg">
+  <img src="assets/branding/readme-banner-light.svg" width="100%" alt="M²CL · Mercury MC Launcher — Cross-platform Minecraft: Java Edition launcher">
+</picture>
 
-[简体中文](README.md) | **English**
-
-<img src="assets/branding/m2cl-128.png" width="80" height="80" alt="M²CL icon">
+<p align="center"><a href="README.md">简体中文</a> · <strong>English</strong></p>
 
 An independent desktop launcher for **Minecraft: Java Edition**, built with **C++17 and Qt Widgets**.
 M²CL organizes Java runtimes, mods, shaders and resource packs around individual game instances,
 with a forest-green interface and light, dark and system appearance modes.
-The project is designed with lower-end computers in mind; performance and compatibility are still being evaluated.
+The project targets multiple platforms and architectures, spanning older and newer Windows systems, macOS and Linux. Performance and compatibility are still being evaluated.
 
-> **0.1.0 development preview.** The interface supports Simplified Chinese, Traditional Chinese and English; language changes apply after restarting.
+> **0.1.0 early development preview.** This version is intended for trying features and providing feedback. The interface, features, configuration format and platform coverage may still change substantially.
+> Larger updates are planned as core features mature and Microsoft / Minecraft API access review and real-account validation progress. Their timing and scope are not yet determined.
 > Microsoft-account authentication has been implemented, but real sign-in currently receives HTTP 403 from Minecraft Services.
 > API access for this application's own client ID has not been confirmed. This is not an approved release or a claim of working end-to-end online sign-in.
 > The current development build also includes offline-player launch without Microsoft authentication; its release authentication and ownership requirements still need to be revised before review.
@@ -31,12 +34,18 @@ Checks are specific to game, loader, mod, runtime and shader versions. Passing s
 
 ## Platforms and languages
 
-| Platform | Development validation |
-| --- | --- |
-| macOS ARM64 | Built and run; selected vanilla / loader combinations reached client initialization. Complete gameplay and Microsoft sign-in validation remain pending |
-| Windows x64 | Build, test and selected installation results are recorded. Interactive desktop, graphical game and new account-backend validation remain incomplete |
-| Linux x64 | Build, test and selected installation results are recorded. Graphical game and new account-backend validation remain incomplete |
-| Other architectures / older systems | Not validated. A Qt 5 build selector does not establish old-Windows or 32-bit compatibility |
+The following are **planned platform and architecture targets**. Compatibility validation is ongoing:
+
+| Platform | Target architectures | Current validation |
+| --- | --- | --- |
+| Windows 7 SP1 / 8 / 8.1 | x86 (32-bit), x64 (64-bit) | Qt 5 compatibility path; execution on the target systems and architectures remains to be validated |
+| Windows 10 | x86 (32-bit), x64 (64-bit) | Windows x64 build, test and selected installation results are recorded; individual OS versions and x86 still require validation |
+| Windows 11 | x64, ARM64 | Windows x64 build, test and selected installation results are recorded; native ARM64 builds and execution remain to be validated |
+| macOS | Intel x64, Apple Silicon ARM64 | ARM64 builds run and selected game combinations reached client initialization; Intel and the minimum OS version remain to be validated |
+| Linux | x64; ARM64 as an additional target | x64 builds and offline tests passed with Qt 5 and Qt 6; distribution coverage, graphical gameplay and ARM64 remain to be validated |
+
+The launcher, Java, Minecraft and loaders have separate compatibility requirements; targeting older systems and 32-bit hardware does not imply that every game version will run.
+Complete gameplay and Microsoft sign-in validation remain pending.
 
 Choose the interface language under Settings → Appearance and restart the launcher to apply it.
 The default follows the system; unsupported system languages fall back to English. Project descriptions, instance names, version identifiers and game logs retain their original text.
@@ -44,10 +53,11 @@ See the [translation guide](docs/internationalization.md).
 
 ## Build and run
 
-Requirements: CMake 3.21+, a C++17 compiler, zlib, and Qt 6.5+ with Core, Widgets, Network, Concurrent and Svg.
+Requirements: CMake 3.21+, a C++17 compiler, zlib, and **Qt 5.15+ or Qt 6.5+** with Core, Widgets, Network, Concurrent and Svg.
 LinguistTools is required to compile translations; tests also require Qt Test. Deploy the Qt Image Formats WebP plugin to read the bundled WebP covers.
 
-Replace `/path/to/Qt` with your Qt SDK installation prefix:
+The example below uses Qt 6. Replace `/path/to/Qt` with your Qt SDK installation prefix.
+For Qt 5, select the matching Qt 5 SDK and change `MCLAUNCHER_QT_MAJOR=6` to `MCLAUNCHER_QT_MAJOR=5`.
 
 ```sh
 cmake -S . -B build -DCMAKE_PREFIX_PATH="/path/to/Qt" -DMCLAUNCHER_QT_MAJOR=6 -DCMAKE_BUILD_TYPE=Release
@@ -61,7 +71,9 @@ Typical executable locations:
 - Linux: `build/m2cl`
 - Windows: `build/Release/m2cl.exe`, or `build/m2cl.exe` with a single-configuration generator
 
-A Qt 5.15 build selector is retained in the source, but that toolchain has not been validated.
+Qt 5.15.19 has been built and checked with offline tests and a UI startup check
+on Linux x64. Windows 7/8.1 and x86 still require validation with their target
+compiler, Qt package and operating system.
 Standalone deployment, signing and installers are also incomplete. Copying the executable alone does not deploy its Qt dependencies and plugins.
 See the [build guide](docs/build-and-validation.md) for testing and deployment notes.
 
@@ -77,6 +89,8 @@ See the [build guide](docs/build-and-validation.md) for testing and deployment n
 ## Next steps
 
 - Prepare authentication and game-entitlement enforcement for official review, request API access, and validate real sign-in and launching.
+- After the first complete version, apply for a project-owned CurseForge API key and add resource search, details, version filtering and downloads.
+- Add per-instance world management: world lists and version information, imports / exports, copying, backups and restoration.
 - Continue reviewing terminology, long text and Windows / Linux font layout across all three languages.
 - Expand mod / shader compatibility checks, legacy-loader support and Windows / Linux graphical validation.
 - Add modpack imports, download pause / persistent resume, standalone packages and performance measurements.
@@ -96,4 +110,9 @@ Redistributed modifications must preserve reasonable attribution, accurately ide
 The additional terms do not prohibit forks, commercial distribution or advertising, or require a fixed logo, hyperlink or UI layout.
 
 Third-party components retain their own licenses; MD4C's original MIT notice is preserved [here](third_party/md4c/LICENSE.md).
+
+Qt is dynamically linked under LGPLv3; see the [Qt legal materials](third_party/qt/README.md).
+The About screen provides offline license access. Binary releases must include
+the separate corresponding Qt and M²CL source companions described in the
+[distribution instructions](docs/build-and-validation.md#distribution).
 M²CL is an independent project and is not affiliated with or endorsed by Mojang Studios or Microsoft.

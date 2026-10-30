@@ -111,13 +111,13 @@ QString ProjectReadme::descriptionHtml(const QString &markdown) {
             if(closing)replacement="</"+name+">";
             else {
                 const auto attributes=htmlAttributes(token.captured(3));QStringList keep;
-                if(name=="img")keep={"src","alt","title","width","height"};
-                else if(name=="a")keep={"href","name","title"};
-                else if(name=="ol")keep={"start","type"};
-                else if(name=="ul")keep={"type"};
-                else if(name=="table")keep={"cellspacing","cellpadding","border","width"};
-                else if(name=="th"||name=="td")keep={"colspan","rowspan","align","valign"};
-                else if(name=="p"||name=="div")keep={"align"};
+                if(name=="img")keep=QStringList{"src","alt","title","width","height"};
+                else if(name=="a")keep=QStringList{"href","name","title"};
+                else if(name=="ol")keep=QStringList{"start","type"};
+                else if(name=="ul")keep=QStringList{"type"};
+                else if(name=="table")keep=QStringList{"cellspacing","cellpadding","border","width"};
+                else if(name=="th"||name=="td")keep=QStringList{"colspan","rowspan","align","valign"};
+                else if(name=="p"||name=="div")keep=QStringList{"align"};
                 replacement="<"+name;
                 for(const auto &key:keep)if(attributes.contains(key))replacement+=" "+key+"=\""+attributes.value(key).toHtmlEscaped()+"\"";
                 replacement+=">";

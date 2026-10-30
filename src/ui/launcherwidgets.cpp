@@ -33,6 +33,8 @@
 #include <QToolButton>
 #include <QLineEdit>
 #include <QWindow>
+#include <QtMath>
+#include <QVector>
 #include <QStyleOptionButton>
 #include <cmath>
 
@@ -219,27 +221,27 @@ void glyph(QPainter &p, Glyph icon, const QRectF &rect, const QColor &color) {
     QPainterPath path;
     switch (icon) {
     case Glyph::Home:
-        p.drawPolyline(QPolygonF{{3,10},{12,3},{21,10}}); p.drawPolyline(QPolygonF{{5,9},{5,21},{10,21},{10,14},{14,14},{14,21},{19,21},{19,9}}); break;
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{3,10},{12,3},{21,10}})); p.drawPolyline(QPolygonF(QVector<QPointF>{{5,9},{5,21},{10,21},{10,14},{14,14},{14,21},{19,21},{19,9}})); break;
     case Glyph::Grid:
         for(int y : {4,14}) for(int x : {4,14}) p.drawRoundedRect(QRectF(x,y,6,6),1,1); break;
     case Glyph::Mods:
-        p.drawPolygon(QPolygonF{{12,3},{21,8},{21,17},{12,22},{3,17},{3,8}});
-        p.drawPolyline(QPolygonF{{3,8},{12,13},{21,8}}); p.drawLine(12,13,12,22); p.drawLine(7,6,16,11); break;
+        p.drawPolygon(QPolygonF(QVector<QPointF>{{12,3},{21,8},{21,17},{12,22},{3,17},{3,8}}));
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{3,8},{12,13},{21,8}})); p.drawLine(12,13,12,22); p.drawLine(7,6,16,11); break;
     case Glyph::Folder:
-        p.drawPolyline(QPolygonF{{3,9},{3,5},{9,5},{11,8},{21,8},{21,20},{3,20},{3,9},{21,9}}); break;
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{3,9},{3,5},{9,5},{11,8},{21,8},{21,20},{3,20},{3,9},{21,9}})); break;
     case Glyph::Document:
-        p.drawPolyline(QPolygonF{{14,3},{5,3},{5,21},{19,21},{19,8},{14,3},{14,8},{19,8}});p.drawLine(8,12,16,12);p.drawLine(8,16,14,16);break;
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{14,3},{5,3},{5,21},{19,21},{19,8},{14,3},{14,8},{19,8}}));p.drawLine(8,12,16,12);p.drawLine(8,16,14,16);break;
     case Glyph::Gamepad:
         path.moveTo(7,7);path.cubicTo(5,7,4,9,3,13);path.lineTo(2,18);path.cubicTo(1,21,4,22,6,19);path.lineTo(8,16);path.lineTo(16,16);path.lineTo(18,19);path.cubicTo(20,22,23,21,22,18);path.lineTo(21,13);path.cubicTo(20,9,19,7,17,7);path.closeSubpath();p.drawPath(path);p.drawLine(6,12,10,12);p.drawLine(8,10,8,14);p.drawEllipse(QPointF(16,11),.8,.8);p.drawEllipse(QPointF(18,14),.8,.8);break;
     case Glyph::Search:p.drawEllipse(QRectF(3,3,13,13));p.drawLine(14,14,21,21);break;
     case Glyph::Ban:p.drawEllipse(QRectF(3,3,18,18));p.drawLine(6,18,18,6);break;
-    case Glyph::Trash:p.drawLine(3,6,21,6);p.drawPolyline(QPolygonF{{8,6},{8,3},{16,3},{16,6}});p.drawPolyline(QPolygonF{{5,6},{6,21},{18,21},{19,6}});p.drawLine(10,10,10,17);p.drawLine(14,10,14,17);break;
+    case Glyph::Trash:p.drawLine(3,6,21,6);p.drawPolyline(QPolygonF(QVector<QPointF>{{8,6},{8,3},{16,3},{16,6}}));p.drawPolyline(QPolygonF(QVector<QPointF>{{5,6},{6,21},{18,21},{19,6}}));p.drawLine(10,10,10,17);p.drawLine(14,10,14,17);break;
     case Glyph::Settings:
         for(int i=0;i<8;++i) { p.save(); p.translate(12,12); p.rotate(i*45); p.drawLine(0,-8,0,-10); p.restore(); }
         p.drawEllipse(QRectF(5,5,14,14)); p.drawEllipse(QRectF(9,9,6,6)); break;
     case Glyph::Download:
-        p.drawLine(12,3,12,15); p.drawPolyline(QPolygonF{{7,10},{12,15},{17,10}});
-        p.drawPolyline(QPolygonF{{4,15},{4,21},{20,21},{20,15}}); break;
+        p.drawLine(12,3,12,15); p.drawPolyline(QPolygonF(QVector<QPointF>{{7,10},{12,15},{17,10}}));
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{4,15},{4,21},{20,21},{20,15}})); break;
     case Glyph::Palette:
         path.moveTo(20,13); path.cubicTo(24,4,12,0,6,5); path.cubicTo(-1,12,4,23,12,21);
         path.cubicTo(17,20,10,15,15,14); path.cubicTo(17,14,19,15,20,13); p.drawPath(path);
@@ -251,30 +253,30 @@ void glyph(QPainter &p, Glyph icon, const QRectF &rect, const QColor &color) {
         for(int i=0;i<10;++i) { const qreal angle=(i*36-90)*3.14159265/180; const qreal radius=i%2?4.3:9;
             const QPointF point(12+radius*std::cos(angle),12+radius*std::sin(angle)); if(i==0)path.moveTo(point);else path.lineTo(point); }
         path.closeSubpath(); p.drawPath(path); break;
-    case Glyph::Play: p.setBrush(color); p.setPen(Qt::NoPen); p.drawPolygon(QPolygonF{{7,4},{20,12},{7,20}}); break;
-    case Glyph::Chevron: p.drawPolyline(QPolygonF{{6,9},{12,15},{18,9}}); break;
+    case Glyph::Play: p.setBrush(color); p.setPen(Qt::NoPen); p.drawPolygon(QPolygonF(QVector<QPointF>{{7,4},{20,12},{7,20}})); break;
+    case Glyph::Chevron: p.drawPolyline(QPolygonF(QVector<QPointF>{{6,9},{12,15},{18,9}})); break;
     case Glyph::Edit:
-        p.drawPolygon(QPolygonF{{4,16},{16,4},{20,8},{8,20},{3,21}}); p.drawLine(13,7,17,11); break;
+        p.drawPolygon(QPolygonF(QVector<QPointF>{{4,16},{16,4},{20,8},{8,20},{3,21}})); p.drawLine(13,7,17,11); break;
     case Glyph::Java:
-        p.drawPolyline(QPolygonF{{5,11},{5,19},{16,19},{16,11}}); p.drawArc(QRectF(14,11,7,7),-90*16,180*16);
+        p.drawPolyline(QPolygonF(QVector<QPointF>{{5,11},{5,19},{16,19},{16,11}})); p.drawArc(QRectF(14,11,7,7),-90*16,180*16);
         path.moveTo(9,8); path.cubicTo(4,5,14,5,10,1); p.drawPath(path); p.drawLine(3,22,19,22); break;
-    case Glyph::Check: p.drawPolyline(QPolygonF{{4,12},{9,17},{20,6}}); break;
-    case Glyph::Refresh: p.drawArc(QRectF(4,4,16,16),30*16,290*16); p.drawPolyline(QPolygonF{{20,3},{20,9},{14,9}}); break;
+    case Glyph::Check: p.drawPolyline(QPolygonF(QVector<QPointF>{{4,12},{9,17},{20,6}})); break;
+    case Glyph::Refresh: p.drawArc(QRectF(4,4,16,16),30*16,290*16); p.drawPolyline(QPolygonF(QVector<QPointF>{{20,3},{20,9},{14,9}})); break;
     case Glyph::Close: p.drawLine(6,6,18,18); p.drawLine(18,6,6,18); break;
     case Glyph::Minimize: p.drawLine(5,12,19,12); break;
     case Glyph::Maximize: p.drawRoundedRect(QRectF(5,5,14,14),1,1); break;
     case Glyph::Leaf:
         path.moveTo(4,20);path.cubicTo(1,9,12,3,21,3);path.cubicTo(22,14,13,23,4,20);p.drawPath(path);p.drawLine(4,20,16,8);break;
     case Glyph::Image:
-        p.drawRoundedRect(QRectF(3,4,18,16),2,2);p.drawEllipse(QRectF(6,7,3,3));p.drawPolyline(QPolygonF{{4,18},{10,12},{13,15},{17,10},{21,15}});break;
+        p.drawRoundedRect(QRectF(3,4,18,16),2,2);p.drawEllipse(QRectF(6,7,3,3));p.drawPolyline(QPolygonF(QVector<QPointF>{{4,18},{10,12},{13,15},{17,10},{21,15}}));break;
     case Glyph::Grass:
-        p.setPen(Qt::NoPen);p.setBrush(QColor("#936335"));p.drawPolygon(QPolygonF{{2,7},{12,12},{12,23},{2,18}});
-        p.setBrush(QColor("#6a472d"));p.drawPolygon(QPolygonF{{12,12},{22,7},{22,18},{12,23}});
-        p.setBrush(QColor("#4c763b"));p.drawPolygon(QPolygonF{{2,7},{12,12},{12,15},{2,10}});
-        p.setBrush(QColor("#3f622f"));p.drawPolygon(QPolygonF{{12,12},{22,7},{22,10},{12,15}});
-        p.setBrush(QColor("#7aa449"));p.drawPolygon(QPolygonF{{2,7},{12,1},{22,7},{12,13}});
-        p.setBrush(QColor("#a4bb5b"));p.drawPolygon(QPolygonF{{5,7},{8,5},{11,7},{8,9}});p.drawPolygon(QPolygonF{{12,5},{15,3},{18,5},{15,7}});
-        p.setBrush(QColor("#5d8539"));p.drawPolygon(QPolygonF{{10,10},{13,8},{16,10},{13,12}});
+        p.setPen(Qt::NoPen);p.setBrush(QColor("#936335"));p.drawPolygon(QPolygonF(QVector<QPointF>{{2,7},{12,12},{12,23},{2,18}}));
+        p.setBrush(QColor("#6a472d"));p.drawPolygon(QPolygonF(QVector<QPointF>{{12,12},{22,7},{22,18},{12,23}}));
+        p.setBrush(QColor("#4c763b"));p.drawPolygon(QPolygonF(QVector<QPointF>{{2,7},{12,12},{12,15},{2,10}}));
+        p.setBrush(QColor("#3f622f"));p.drawPolygon(QPolygonF(QVector<QPointF>{{12,12},{22,7},{22,10},{12,15}}));
+        p.setBrush(QColor("#7aa449"));p.drawPolygon(QPolygonF(QVector<QPointF>{{2,7},{12,1},{22,7},{12,13}}));
+        p.setBrush(QColor("#a4bb5b"));p.drawPolygon(QPolygonF(QVector<QPointF>{{5,7},{8,5},{11,7},{8,9}}));p.drawPolygon(QPolygonF(QVector<QPointF>{{12,5},{15,3},{18,5},{15,7}}));
+        p.setBrush(QColor("#5d8539"));p.drawPolygon(QPolygonF(QVector<QPointF>{{10,10},{13,8},{16,10},{13,12}}));
         p.setBrush(QColor("#b38b50"));p.drawRect(QRectF(4,12,2,2));p.drawRect(QRectF(8,17,2,3));
         p.setBrush(QColor("#4e3527"));p.drawRect(QRectF(15,17,2,2));p.drawRect(QRectF(19,12,2,3));break;
     }
@@ -462,8 +464,8 @@ void CoverStore::paint(QPainter &p,const QRectF &rectangle,const QString &versio
     } else {
         QLinearGradient sky(rectangle.topLeft(),rectangle.bottomLeft());sky.setColorAt(0,QColor("#bbd4ca"));sky.setColorAt(1,QColor("#799d77"));p.fillRect(rectangle,sky);
         p.translate(rectangle.topLeft());p.scale(rectangle.width()/360,rectangle.height()/200);
-        p.setPen(Qt::NoPen);p.setBrush(QColor("#86a889"));p.drawPolygon(QPolygon{{0,120},{60,120},{60,80},{120,80},{120,105},{230,105},{230,65},{290,65},{290,110},{360,110},{360,200},{0,200}});
-        p.setBrush(QColor("#466f55"));p.drawPolygon(QPolygon{{0,170},{90,170},{90,140},{170,140},{170,160},{260,160},{260,135},{360,135},{360,200},{0,200}});
+        p.setPen(Qt::NoPen);p.setBrush(QColor("#86a889"));p.drawPolygon(QPolygon(QVector<QPoint>{{0,120},{60,120},{60,80},{120,80},{120,105},{230,105},{230,65},{290,65},{290,110},{360,110},{360,200},{0,200}}));
+        p.setBrush(QColor("#466f55"));p.drawPolygon(QPolygon(QVector<QPoint>{{0,170},{90,170},{90,140},{170,140},{170,160},{260,160},{260,135},{360,135},{360,200},{0,200}}));
     }
     p.restore();
 }

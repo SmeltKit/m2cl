@@ -4,7 +4,7 @@
 
 #include "ui/accountspanel.h"
 #include "ui/javamanager.h"
-#include <QPromise>
+#include <QtConcurrent/QtConcurrentRun>
 #include "ui/networknotice.h"
 #include "ui/mainwindow.h"
 #include "ui/projectlegal.h"
@@ -78,6 +78,11 @@ private slots:
         auto attribution=window.findChild<QLabel *>("aboutProjectAttribution");
         QVERIFY(attribution);
         QVERIFY(attribution->text().contains("ppm203"));
+        auto qtNotice=window.findChild<QLabel *>("aboutQtNotice");
+        QVERIFY(qtNotice);
+        QVERIFY(qtNotice->text().contains(qVersion()));
+        QVERIFY(qtNotice->text().contains("The Qt Company Ltd."));
+        QVERIFY(qtNotice->text().contains("LGPLv3"));
         auto legal=window.findChild<QPushButton *>("showProjectLicenses");
         QVERIFY(legal);
         bool opened=false;
@@ -93,7 +98,7 @@ private slots:
         dialog.show();
         auto tabs=dialog.findChild<QTabWidget *>("projectLegalTabs");
         QVERIFY(tabs);
-        QCOMPARE(tabs->count(),4);
+        QCOMPARE(tabs->count(),5);
         const auto gpl=dialog.findChild<QPlainTextEdit *>("projectGplText");
         QVERIFY(gpl->isReadOnly());
         QVERIFY(gpl->toPlainText().contains("Version 3, 29 June 2007"));
@@ -104,17 +109,35 @@ private slots:
         QVERIFY(terms.contains("do not\nprohibit forks, commercial distribution"));
         QVERIFY(dialog.findChild<QPlainTextEdit *>("projectNoticeText")->toPlainText().contains("Original project author: ppm203"));
         QVERIFY(dialog.findChild<QPlainTextEdit *>("projectMd4cText")->toPlainText().contains("Permission is hereby granted"));
+        auto qtSelector=dialog.findChild<mc::SelectBox *>("qtLegalDocument");
+        auto qtText=dialog.findChild<QPlainTextEdit *>("qtLegalText");
+        QVERIFY(qtSelector&&qtText&&qtText->isReadOnly());
+        QCOMPARE(qtSelector->count(),6);
+        QVERIFY(qtText->toPlainText().contains("dynamically linked"));
+        qtSelector->setCurrentIndex(1);
+        QVERIFY(qtText->toPlainText().contains("GNU LESSER GENERAL PUBLIC LICENSE"));
+        QVERIFY(qtText->toPlainText().contains("6. Revised Versions of the GNU Lesser General Public License."));
+        qtSelector->setCurrentIndex(3);
+        QVERIFY(qtText->toPlainText().contains("Google Inc."));
+        QVERIFY(qtText->toPlainText().contains("Mozilla Public License"));
+        qtSelector->setCurrentIndex(4);
+        QVERIFY(qtText->toPlainText().contains("383dc907816338f0cba72088a524c07458dfc69ce684ca9132fcc4fe91c24b0b"));
+        QVERIFY(qtText->toPlainText().contains("reverse engineering"));
+        qtSelector->setCurrentIndex(5);
+        QVERIFY(qtText->toPlainText().contains("libqwebp.dylib"));
+        qtSelector->setCurrentIndex(0);
         for(bool dark:{false,true}){
             window.setAppearance(dark?"dark":"light","forest");
             dialog.resize(680,520);
             for(int i=0;i<tabs->count();++i){
                 tabs->setCurrentIndex(i);QCoreApplication::processEvents();
                 auto text=qobject_cast<QPlainTextEdit *>(tabs->currentWidget());
+                if(!text)text=tabs->currentWidget()->findChild<QPlainTextEdit *>();
                 QVERIFY(text&&text->isVisible());
                 QVERIFY(text->viewport()->width()>500);
                 QVERIFY(text->viewport()->height()>150);
             }
-            tabs->setCurrentIndex(2);
+            tabs->setCurrentIndex(4);
             if(qEnvironmentVariableIsSet("M2CL_LEGAL_REVIEW")){
                 const auto output=qEnvironmentVariable("M2CL_LEGAL_REVIEW");QDir().mkpath(output);
                 dialog.grab().save(output+(dark?"/legal-dark.png":"/legal-light.png"));
@@ -514,7 +537,7 @@ private slots:
         QVERIFY(!version->isEditable());version->addItem("1.21.1","1.21.1");version->setCurrentIndex(version->findData("1.21.1")); loader->setCurrentIndex(loader->findData("neoforge"));
         mc::ResourceTags tags; tags.categories={{"optimization",QStringLiteral("性能优化")}};
         tags.loaders={{"fabric","Fabric"},{"rift","Rift"},{"quilt","Quilt"},{"forge","Forge"},{"neoforge","NeoForge"}};
-        tags.gameVersions={"26.4-snapshot-6","1.21.1","1.20.1"}; tags.gameVersionTypes={{"26.4-snapshot-6","snapshot"},{"1.21.1","release"},{"1.20.1","release"}};
+        tags.gameVersions=QStringList{"26.4-snapshot-6","1.21.1","1.20.1"}; tags.gameVersionTypes={{"26.4-snapshot-6","snapshot"},{"1.21.1","release"},{"1.20.1","release"}};
         client->tagsReady(tags);
         QCOMPARE(version->currentText(),QString("1.21.1")); QCOMPARE(loader->currentData().toString(),QString("neoforge"));
         QCOMPARE(categories->flow(),QListView::TopToBottom); QCOMPARE(loader->itemData(1).toString(),QString("forge")); QCOMPARE(loader->itemData(2).toString(),QString("neoforge"));
@@ -580,12 +603,12 @@ private slots:
     void marketFilterFailureIsScopedAndClearsAfterSuccessfulReload() {
         QTemporaryDir dir;QVERIFY(fixture(dir.path()));mc::MainWindow window{mc::SettingsStore(dir.path())};window.resize(1120,760);window.show();QTRY_VERIFY(window.ready());window.changePage(2);
         auto client=window.findChild<mc::ResourceClient *>();auto notice=window.findChild<mc::NetworkNotice *>("modFilterNetworkState");
-        mc::ResourceProject project;project.id="sodium";project.name="Sodium";project.description="A fast rendering engine";project.categories={"optimization","fabric"};client->projectsReady({project});
+        mc::ResourceProject project;project.id="sodium";project.name="Sodium";project.description="A fast rendering engine";project.categories=QStringList{"optimization","fabric"};client->projectsReady({project});
         client->tagsFailed(QStringLiteral("分类加载失败：连接超时\n加载器加载失败：连接超时\n游戏版本加载失败：连接超时"));QVERIFY(notice->isVisible());
         auto list=window.findChild<QListWidget *>("modResults");QCOMPARE(list->count(),1);QVERIFY(!notice->findChild<QPlainTextEdit *>()->isVisible());QVERIFY(list->isVisible());
         if(qEnvironmentVariableIsSet("M2CL_NETWORK_REVIEW")){const auto out=qEnvironmentVariable("M2CL_NETWORK_REVIEW");QDir().mkpath(out);QTest::qWait(30);window.grab().save(out+"/market-filter-failure.png");}
         client->tagsLoading();QVERIFY(notice->findChild<mc::BusySpinner *>()->isVisible());QVERIFY(notice->findChild<QPlainTextEdit *>()->toPlainText().isEmpty());
-        mc::ResourceTags tags;tags.gameVersions={"1.20.1"};tags.gameVersionTypes={{"1.20.1","release"}};client->tagsReady(tags);QVERIFY(notice->isHidden());QCOMPARE(list->count(),1);
+        mc::ResourceTags tags;tags.gameVersions=QStringList{"1.20.1"};tags.gameVersionTypes={{"1.20.1","release"}};client->tagsReady(tags);QVERIFY(notice->isHidden());QCOMPARE(list->count(),1);
         if(qEnvironmentVariableIsSet("M2CL_NETWORK_REVIEW"))window.grab().save(qEnvironmentVariable("M2CL_NETWORK_REVIEW")+"/market-recovered.png");
         // A version request must not stop a search spinner or write to the download task.
         window.findChild<QPushButton *>("searchMods")->click();client->versionsFailed("Other request failed");QVERIFY(window.findChild<mc::BusySpinner *>("modSearchSpinner")->isVisible());QVERIFY(window.findChild<QLabel *>("resourceDownloadStatus")->text().isEmpty());
@@ -601,7 +624,7 @@ private slots:
     void javaQueryFailureLivesInBuildListAndClearsOnSuccess() {
         QTemporaryDir dir;mc::Settings settings;mc::JavaManager view(settings,mc::SettingsStore(dir.path()));view.resize(1080,700);view.show();view.findChild<QTabWidget *>("javaTabs")->setCurrentIndex(1);
         auto watcher=static_cast<QFutureWatcher<mc::JavaPackageList> *>(view.findChild<QFutureWatcherBase *>("javaPackageQuery"));QVERIFY(watcher);
-        auto deliver=[&](const mc::JavaPackageList &result){QPromise<mc::JavaPackageList> promise;promise.start();promise.addResult(result);promise.finish();watcher->setFuture(promise.future());};
+        auto deliver=[&](const mc::JavaPackageList &result){watcher->setFuture(QtConcurrent::run([result]{return result;}));};
         mc::JavaPackageList failed;failed.error=QStringLiteral("Temurin 连接超时，请检查网络后重试");deliver(failed);
         auto notice=view.findChild<mc::NetworkNotice *>("javaQueryNetworkState");QTRY_VERIFY(notice->isVisible());auto table=view.findChild<QTableWidget *>("javaBuildList");QVERIFY(table->viewport()->isAncestorOf(notice));QCOMPARE(table->rowCount(),0);QCoreApplication::processEvents();
         const auto center=notice->mapTo(table->viewport(),notice->rect().center());QVERIFY(qAbs(center.y()-table->viewport()->height()/2)<12);
@@ -630,7 +653,7 @@ private slots:
     void modRowsScrollByPixelsAndHaveIconsAndTranslatedTags() {
         QTemporaryDir dir;QVERIFY(fixture(dir.path(),1));mc::MainWindow window{mc::SettingsStore(dir.path())};window.show();QTRY_VERIFY(window.ready());window.changePage(2);
         auto client=window.findChild<mc::ResourceClient *>();auto list=window.findChild<QListWidget *>("modResults");QVERIFY(client&&list);
-        QList<mc::ResourceProject> projects;for(int i=0;i<8;++i){mc::ResourceProject p;p.id=QString::number(i);p.name="Supplementaries";p.categories={"decoration","fabric","game-mechanics"};projects.append(p);}client->projectsReady(projects);QTest::qWait(20);
+        QList<mc::ResourceProject> projects;for(int i=0;i<8;++i){mc::ResourceProject p;p.id=QString::number(i);p.name="Supplementaries";p.categories=QStringList{"decoration","fabric","game-mechanics"};projects.append(p);}client->projectsReady(projects);QTest::qWait(20);
         QCOMPARE(list->verticalScrollMode(),QAbstractItemView::ScrollPerPixel);list->verticalScrollBar()->setValue(7);QCOMPARE(list->verticalScrollBar()->value(),7);
         auto icons=list->findChildren<QLabel *>("modProjectIcon");QCOMPARE(icons.size(),8);
         auto tags=list->findChild<mc::AdaptiveTags *>("modProjectTags");QVERIFY(tags);QVERIFY(tags->labels().contains(QStringLiteral("装饰与建筑")));
@@ -638,7 +661,7 @@ private slots:
     }
     void projectVersionTooltipIsBoundedAndDetailsAreGrouped() {
         QTemporaryDir dir;QVERIFY(fixture(dir.path(),1));mc::MainWindow window{mc::SettingsStore(dir.path())};window.show();QTRY_VERIFY(window.ready());window.changePage(2);
-        mc::ResourceProject p;p.id="mouse";p.name="Mouse Tweaks";p.gameVersions={"b1.7.3","1.20.1","1.20.4","26.1.2"};
+        mc::ResourceProject p;p.id="mouse";p.name="Mouse Tweaks";p.gameVersions=QStringList{"b1.7.3","1.20.1","1.20.4","26.1.2"};
         for(int i=1;i<40;++i)p.gameVersions.append(QString("1.21.%1").arg(i));window.findChild<mc::ResourceClient *>()->projectsReady({p});
         auto summary=window.findChild<QLabel *>("modSupportSummary");QVERIFY(summary);QVERIFY(summary->toolTip().size()<400);QVERIFY(!summary->toolTip().contains(p.gameVersions.join("、")));
         QVERIFY(!window.findChild<QPushButton *>("allProjectVersions"));
@@ -648,7 +671,7 @@ private slots:
         mc::FittingVersionLabel versions({"26.3","26.2","26.1","1.21","1.20","1.19"});versions.resize(900,24);versions.show();QTest::qWait(10);QVERIFY(!versions.text().contains(QStringLiteral("等")));QVERIFY(versions.text().contains("1.19"));versions.resize(180,24);QVERIFY(versions.text().contains(QStringLiteral("等")));
     }
     void modVersionPageDefaultsToStableAndSeparatesChannels() {
-        mc::ResourceFile stable;stable.versionName="Stable Forge";stable.fileName="forge.jar";stable.gameVersions={"1.20.1"};stable.loaders={"forge"};stable.releaseType="release";
+        mc::ResourceFile stable;stable.versionName="Stable Forge";stable.fileName="forge.jar";stable.gameVersions=QStringList{"1.20.1"};stable.loaders=QStringList{"forge"};stable.releaseType="release";
         auto beta=stable;beta.fileName="beta.jar";beta.releaseType="beta";auto alpha=stable;alpha.releaseType="alpha";
         mc::ModVersionView view("Example",{},nullptr,{beta,stable,alpha});view.resize(800,700);view.show();QTest::qWait(20);
         auto list=view.findChild<QTableWidget *>("modFileVersions");auto filter=view.findChild<QTabBar *>("modReleaseChannel");auto install=view.findChild<QPushButton *>("downloadModVersion");auto sections=view.findChild<QTabWidget *>("modDetailSections");QVERIFY(list&&filter&&install&&sections);
@@ -657,18 +680,18 @@ private slots:
         mc::ModVersionView noStable("Preview only",{},nullptr,{beta,alpha});noStable.show();noStable.findChild<QTabWidget *>("modDetailSections")->setCurrentIndex(1);QCOMPARE(noStable.selectedIndex(),-1);QVERIFY(!noStable.findChild<QPushButton *>("downloadModVersion")->isEnabled());QVERIFY(noStable.findChild<QLabel *>("noStableModVersions")->isVisible());
     }
     void fileVersionsSeparateLoadersAndRetainOriginalSelectionIndices(){
-        mc::ResourceFile forge;forge.versionNumber="forge-build";forge.loaders={"forge"};forge.gameVersions={"1.20.1"};forge.releaseType="release";auto neo=forge;neo.loaders={"neoforge"};auto fabric=forge;fabric.loaders={"fabric","quilt"};auto beta=fabric;beta.gameVersions={"1.21"};beta.releaseType="beta";
+        mc::ResourceFile forge;forge.versionNumber="forge-build";forge.loaders=QStringList{"forge"};forge.gameVersions=QStringList{"1.20.1"};forge.releaseType="release";auto neo=forge;neo.loaders=QStringList{"neoforge"};auto fabric=forge;fabric.loaders=QStringList{"fabric","quilt"};auto beta=fabric;beta.gameVersions=QStringList{"1.21"};beta.releaseType="beta";
         mc::ModVersionView view("Test",{},nullptr,{forge,neo,fabric,beta});view.resize(840,720);view.show();view.findChild<QTabWidget *>("modDetailSections")->setCurrentIndex(1);auto rows=view.findChild<QTableWidget *>("modFileVersions");auto channels=view.findChild<QTabBar *>("modReleaseChannel");
         view.setDownloadFilter("1.20.1","fabric");QCOMPARE(view.selectedIndex(),2);QVERIFY(rows->isRowHidden(0)&&rows->isRowHidden(1)&&!rows->isRowHidden(2));QCOMPARE(channels->tabText(0),QStringLiteral("正式版（1）"));
         view.setDownloadFilter("1.20.1","quilt");QCOMPARE(view.selectedIndex(),2);view.setDownloadFilter("1.20.1","neoforge");QCOMPARE(view.selectedIndex(),1);
         view.setDownloadFilter("1.21","forge");QCOMPARE(view.selectedIndex(),-1);QVERIFY(!view.findChild<QPushButton *>("downloadModVersion")->isEnabled());view.setDownloadFilter("1.21","fabric");channels->setCurrentIndex(1);QCOMPARE(view.selectedIndex(),3);
     }
     void expandingVersionFilterKeepsSelectedFileVisible(){
-        QList<mc::ResourceFile> files;for(int i=0;i<60;++i){mc::ResourceFile f;f.fileName=QString::number(i)+".jar";f.loaders={"fabric"};f.gameVersions={i==59?"1.20.1":"1.21"};f.releaseType="release";files.append(f);}mc::ModVersionView view("Test",{},nullptr,files);view.resize(840,620);view.show();view.findChild<QTabWidget *>("modDetailSections")->setCurrentIndex(1);view.setDownloadFilter("1.20.1","fabric");QCOMPARE(view.selectedIndex(),59);view.findChild<QComboBox *>("modFileGameVersion")->setCurrentIndex(0);QCoreApplication::processEvents();auto table=view.findChild<QTableWidget *>("modFileVersions");QCOMPARE(view.selectedIndex(),59);QVERIFY(table->item(59,0)->isSelected());QVERIFY(table->visualItemRect(table->item(59,0)).intersects(table->viewport()->rect()));
+        QList<mc::ResourceFile> files;for(int i=0;i<60;++i){mc::ResourceFile f;f.fileName=QString::number(i)+".jar";f.loaders=QStringList{"fabric"};f.gameVersions=QStringList{i==59?"1.20.1":"1.21"};f.releaseType="release";files.append(f);}mc::ModVersionView view("Test",{},nullptr,files);view.resize(840,620);view.show();view.findChild<QTabWidget *>("modDetailSections")->setCurrentIndex(1);view.setDownloadFilter("1.20.1","fabric");QCOMPARE(view.selectedIndex(),59);view.findChild<QComboBox *>("modFileGameVersion")->setCurrentIndex(0);QCoreApplication::processEvents();auto table=view.findChild<QTableWidget *>("modFileVersions");QCOMPARE(view.selectedIndex(),59);QVERIFY(table->item(59,0)->isSelected());QVERIFY(table->visualItemRect(table->item(59,0)).intersects(table->viewport()->rect()));
     }
     void planChoicesShowDisabledFilesAndPruneOnlyExclusiveChildren(){
         if(qEnvironmentVariableIsSet("M2CL_MOD_UI_REVIEW"))mc::applyTheme(mc::makeTheme("forest",true));
-        mc::ModPlan plan;plan.target.id="Test";plan.target.loader="fabric";plan.rootProjectId="root";for(const auto &id:QStringList{"root","left","right","shared","exclusive"}){mc::ResourceFile file;file.projectId=id;file.versionName=id;file.versionNumber="1.0";plan.files.append(file);plan.resolved.append(file);}plan.edges={{"root","left","","required"},{"root","right","","required"},{"left","shared","","required"},{"right","shared","","required"},{"left","exclusive","","required"}};plan.disabledFiles.insert("shared","my-shared.jar.disabled");plan.replacements={"left-old.jar"};plan.replacementProjects.insert("left-old.jar","left");plan.replacementVersions.insert("left-old.jar","0.9");
+        mc::ModPlan plan;plan.target.id="Test";plan.target.loader="fabric";plan.rootProjectId="root";for(const auto &id:QStringList{"root","left","right","shared","exclusive"}){mc::ResourceFile file;file.projectId=id;file.versionName=id;file.versionNumber="1.0";plan.files.append(file);plan.resolved.append(file);}plan.edges={{"root","left","","required"},{"root","right","","required"},{"left","shared","","required"},{"right","shared","","required"},{"left","exclusive","","required"}};plan.disabledFiles.insert("shared","my-shared.jar.disabled");plan.replacements=QStringList{"left-old.jar"};plan.replacementProjects.insert("left-old.jar","left");plan.replacementVersions.insert("left-old.jar","0.9");
         mc::ModPlanView dialog(plan);dialog.show();QMap<QString,QCheckBox *> choices;for(auto choice:dialog.findChildren<QCheckBox *>("dependencyChoice"))choices.insert(choice->property("projectId").toString(),choice);auto action=dialog.findChild<QComboBox *>("disabledDependencyAction");QVERIFY(action);QCOMPARE(action->currentData().toString(),QString("enable"));QVERIFY(dialog.selectedPlan().enableFiles.contains("shared"));choices.value("left")->setChecked(false);QVERIFY(!choices.value("exclusive")->isChecked());QVERIFY(!choices.value("exclusive")->isEnabled());QVERIFY(choices.value("shared")->isChecked());QVERIFY(dialog.selectedPlan().replacements.isEmpty()||!dialog.selectedPlan().replacements.contains("left-old.jar"));choices.value("left")->setChecked(true);QVERIFY(choices.value("exclusive")->isChecked());QVERIFY(choices.value("exclusive")->isEnabled());action->setCurrentIndex(1);QVERIFY(dialog.selectedPlan().enableFiles.isEmpty());QVERIFY(dialog.selectedPlan().replacements.contains("my-shared.jar.disabled"));
         if(qEnvironmentVariableIsSet("M2CL_MOD_UI_REVIEW")){QDir().mkpath(qEnvironmentVariable("M2CL_MOD_UI_REVIEW"));dialog.grab().save(qEnvironmentVariable("M2CL_MOD_UI_REVIEW")+"/dependency-states-synthetic.png");}
     }
@@ -723,7 +746,7 @@ private slots:
         mc::ModPlan plan;plan.target.id="survival";plan.displayTargetName=QStringLiteral("日常生存");plan.target.version="1.20.1";plan.target.loader="fabric";plan.target.loaderVersion="0.16.10";plan.rootProjectId="root";
         for(const auto &id:QStringList{"root","api","shared"}){mc::ResourceFile f;f.projectId=id;f.versionNumber=id=="root"?"6.4.0+1.20.1":"0.92.2+1.20.1";plan.resolved.append(f);}
         plan.projectNames={{"root","Comforts"},{"api","Fabric API"},{"shared","Cloth Config API"}};
-        plan.files={plan.resolved[0],plan.resolved[1]};plan.reusedProjects={"shared"};plan.reusedFiles.insert("shared","cloth-config.jar");plan.edges={{"root","api","","required"},{"root","shared","","required"}};
+        plan.files={plan.resolved[0],plan.resolved[1]};plan.reusedProjects=QStringList{"shared"};plan.reusedFiles.insert("shared","cloth-config.jar");plan.edges={{"root","api","","required"},{"root","shared","","required"}};
         mc::ModPlanView view(plan);view.show();QCoreApplication::processEvents();
         QStringList tones;for(auto frame:view.findChildren<QFrame *>())if(frame->property("installSection").isValid())tones.append(frame->property("installSection").toString());QVERIFY(tones.contains("add"));QVERIFY(tones.contains("reuse"));QVERIFY(tones.contains("warning"));
         QCOMPARE(view.selectedPlan().files.size(),2);QVERIFY(!view.windowFlags().testFlag(Qt::FramelessWindowHint));
@@ -747,7 +770,7 @@ private slots:
     void installationIconsSupportReusedProjectsAndLocalFallback() {
         mc::ModPlan plan;plan.rootProjectId="root";
         for(const auto &id:QStringList{"root","existing","local"}){mc::ResourceFile f;f.projectId=id;plan.resolved.append(f);}
-        plan.files={plan.resolved[0]};plan.reusedProjects={"existing","local"};plan.edges={{"root","existing","","required"},{"root","local","","required"}};
+        plan.files={plan.resolved[0]};plan.reusedProjects=QStringList{"existing","local"};plan.edges={{"root","existing","","required"},{"root","local","","required"}};
         const QUrl url("https://cdn.modrinth.com/test.png");plan.projectIcons={{"root",url},{"existing",url},{"local",url}};
         QImage sample(8,8,QImage::Format_ARGB32);sample.fill(Qt::red);QByteArray bytes;QBuffer buffer(&bytes);buffer.open(QIODevice::WriteOnly);sample.save(&buffer,"PNG");plan.localProjectIcons.insert("local",bytes);
         mc::ModPlanView view(plan);QMap<QString,QLabel *> labels;for(auto label:view.findChildren<QLabel *>("installProjectIcon"))labels.insert(label->property("projectId").toString(),label);
@@ -757,14 +780,14 @@ private slots:
     }
     void installPlanOffersExplicitDependencyAndRedownloadChoices(){
         mc::ModPlan plan;plan.target.id="Preview instance";plan.target.version="1.20.1";plan.target.loader="fabric";plan.rootProjectId="root";
-        for(const auto &id:QStringList{"root","mid","grand"}){mc::ResourceFile file;file.projectId=id;file.versionName=id;file.versionNumber="1.0";plan.resolved.append(file);}plan.files={plan.resolved.at(0),plan.resolved.at(1)};plan.reusedProjects={"grand"};plan.reusedFiles.insert("grand","manually-renamed.jar");plan.edges={{"root","mid","","required"},{"mid","grand","","required"},{"root","grand","","required"},{"grand","root","","required"}};
+        for(const auto &id:QStringList{"root","mid","grand"}){mc::ResourceFile file;file.projectId=id;file.versionName=id;file.versionNumber="1.0";plan.resolved.append(file);}plan.files={plan.resolved.at(0),plan.resolved.at(1)};plan.reusedProjects=QStringList{"grand"};plan.reusedFiles.insert("grand","manually-renamed.jar");plan.edges={{"root","mid","","required"},{"mid","grand","","required"},{"root","grand","","required"},{"grand","root","","required"}};
         mc::ModPlanView dialog(plan);dialog.show();auto choices=dialog.findChildren<QCheckBox *>("dependencyChoice");QCOMPARE(choices.size(),1);QVERIFY(choices.first()->isChecked());QCOMPARE(dialog.selectedPlan().files.size(),2);auto warning=dialog.findChild<QLabel *>("modDependencyWarning");QVERIFY(warning->isHidden());
         choices.first()->setChecked(false);QVERIFY(!warning->isHidden());auto selected=dialog.selectedPlan();QCOMPARE(selected.files.size(),1);QCOMPARE(selected.files.first().projectId,QString("root"));QCOMPARE(selected.skippedProjects,QStringList{"mid"});auto buttons=dialog.findChild<QDialogButtonBox *>();QVERIFY(buttons->button(QDialogButtonBox::Ok)->isEnabled());
         auto again=dialog.findChild<QRadioButton *>("redownloadChoice");QVERIFY(again);QVERIFY(!again->isChecked());again->setChecked(true);selected=dialog.selectedPlan();QCOMPARE(selected.files.size(),2);QVERIFY(selected.reusedFiles.isEmpty());QVERIFY(selected.replacements.contains("manually-renamed.jar"));QVERIFY(!dialog.findChild<QLabel *>("modReplacementNotice")->isHidden());auto reuse=dialog.findChild<QRadioButton *>("reuseChoice");QVERIFY(reuse);QVERIFY(!reuse->isChecked());reuse->setChecked(true);QVERIFY(!again->isChecked());QVERIFY(dialog.selectedPlan().reusedProjects.contains("grand"));
         dialog.reject();QCOMPARE(dialog.result(),int(QDialog::Rejected));plan.error="Declared hard conflict";mc::ModPlanView blocked(plan);QVERIFY(!blocked.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled());
     }
     void supportedGameVersionsSeparateReleaseAndTestWithoutAppendingToReadme() {
-        mc::ModVersionView view("Test",{},nullptr,{});mc::ResourceTags tags;tags.gameVersions={"26.4-snapshot-6","26.3","26.2","26w14a","1.21.1","1.21","1.20.1","1.20-pre1","20w14infinite"};tags.gameVersionTypes={{"26.3","release"},{"26.4-snapshot-6","snapshot"},{"26w14a","snapshot"}};view.setSupportedVersionMetadata(tags);
+        mc::ModVersionView view("Test",{},nullptr,{});mc::ResourceTags tags;tags.gameVersions=QStringList{"26.4-snapshot-6","26.3","26.2","26w14a","1.21.1","1.21","1.20.1","1.20-pre1","20w14infinite"};tags.gameVersionTypes={{"26.3","release"},{"26.4-snapshot-6","snapshot"},{"26w14a","snapshot"}};view.setSupportedVersionMetadata(tags);
         mc::ResourceProject project;project.body="Original description";project.gameVersions=tags.gameVersions;project.gameVersions.append("26.3");view.setProjectInfo(project);view.resize(840,620);view.show();
         auto sections=view.findChild<QTabWidget *>("modDetailSections");sections->setCurrentIndex(2);auto channels=view.findChild<QTabBar *>("supportedGameVersionChannels");auto pages=view.findChild<QStackedWidget *>("supportedGameVersionPages");
         QCOMPARE(channels->tabData(channels->currentIndex()).toString(),QString("release"));QCOMPARE(channels->tabText(0),QStringLiteral("正式版（5）"));QCOMPARE(channels->tabText(1),QStringLiteral("测试版（4）"));
@@ -813,7 +836,7 @@ private slots:
         }
         mc::SettingsStore store(dir.path());mc::MainWindow window{store};window.show();QTRY_VERIFY(window.ready());window.changePage(2);const auto launch=store.load().selectedInstance;
         mc::ResourceProject project;project.id="test";project.name="Test mod";auto client=window.findChild<mc::ResourceClient *>();client->projectsReady({project});auto results=window.findChild<QListWidget *>("modResults");results->itemWidget(results->item(0))->findChild<QPushButton *>()->click();
-        mc::ResourceFile file;file.releaseType="release";file.gameVersions={"1.20.1"};file.loaders={"fabric"};file.fileName="test.jar";client->versionsReady({file});QTest::qWait(180);
+        mc::ResourceFile file;file.releaseType="release";file.gameVersions=QStringList{"1.20.1"};file.loaders=QStringList{"fabric"};file.fileName="test.jar";client->versionsReady({file});QTest::qWait(180);
         auto view=window.findChild<mc::ModVersionView *>();QVERIFY(view);view->findChild<QTabWidget *>("modDetailSections")->setCurrentIndex(1);
         int candidates=-1;QStringList names;QTimer::singleShot(0,&window,[&]{auto dialog=window.findChild<QDialog *>("modInstallTargetDialog");if(!dialog)return;auto list=dialog->findChild<QListWidget *>("compatibleModInstances");if(list){candidates=list->count();for(int i=0;i<list->count();++i)names.append(QFileInfo(list->item(i)->data(Qt::UserRole).toString()).fileName());}dialog->reject();});
         view->findChild<QPushButton *>("downloadModVersion")->click();QCOMPARE(candidates,2);QVERIFY(names.contains("fabric-one")&&names.contains("fabric-two"));QCOMPARE(store.load().selectedInstance,launch);QVERIFY(store.load().modInstallTarget.isEmpty());

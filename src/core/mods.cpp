@@ -146,7 +146,7 @@ static LocalMod inspectModImpl(const QString &path,const QString &preferredLoade
         }
         for(const auto &loader:QStringList{"fabric","quilt","neoforge","forge"})if(result.metadata.contains(loader)){static_cast<ModMetadata &>(result)=result.metadata.value(loader);break;}
         // Identify the OptiFine component from class signatures, never from its filename.
-        if(!result.known&&jarEntry(path,"optifine/OptiFineClassTransformer.class").startsWith(QByteArray::fromHex("cafebabe"))&&jarEntry(path,"optifine/Installer.class").startsWith(QByteArray::fromHex("cafebabe"))){result.known=true;result.id="optifine";result.ids={"optifine"};result.name="OptiFine";result.loader="optifine";result.version="unknown";}
+        if(!result.known&&jarEntry(path,"optifine/OptiFineClassTransformer.class").startsWith(QByteArray::fromHex("cafebabe"))&&jarEntry(path,"optifine/Installer.class").startsWith(QByteArray::fromHex("cafebabe"))){result.known=true;result.id="optifine";result.ids=QStringList{"optifine"};result.name="OptiFine";result.loader="optifine";result.version="unknown";}
         if(!result.known)result.problem=result.metadataProblems.isEmpty()?QCoreApplication::translate("M2CL", "无法完整识别元数据，兼容性需确认"):QCoreApplication::translate("M2CL", "模组元数据无效：%1").arg(result.metadataProblems.values().join(QCoreApplication::translate("M2CL", "；")));
         return selectModMetadata(result,preferredLoader);
     }catch(const std::exception &error){result.known=false;result.problem=QString::fromUtf8(error.what());return result;}

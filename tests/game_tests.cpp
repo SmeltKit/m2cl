@@ -139,8 +139,8 @@ private slots:
         QJsonObject metadata{{"_m2clOptifine",QJsonObject{{"base",QJsonObject{{"id","1.20.1"}}}}}};
         QLockFile lock(root+"/mods/.m2cl-install.lock");QVERIFY(lock.tryLock());
         mc::OptifineChange change;auto flag=std::make_shared<std::atomic_bool>(false);
-        QVERIFY_THROWS_EXCEPTION(std::exception,change.prepare(req,metadata,{},flag,{}));QVERIFY(QFile::exists(root+"/mods/OptiFine.jar"));
-        lock.unlock();flag->store(true);QVERIFY_THROWS_EXCEPTION(std::exception,change.prepare(req,metadata,{},flag,{}));
+        QVERIFY_EXCEPTION_THROWN(change.prepare(req,metadata,{},flag,{}),std::exception);QVERIFY(QFile::exists(root+"/mods/OptiFine.jar"));
+        lock.unlock();flag->store(true);QVERIFY_EXCEPTION_THROWN(change.prepare(req,metadata,{},flag,{}),std::exception);
     }
     void optifineDoesNotOverwriteExternallyChangedFiles() {
         QTemporaryDir dir;QVERIFY(save(dir.path()+"/mods/OptiFine.jar","changed"));mc::InstallRequest req;req.directory=QFileInfo(dir.path()).canonicalFilePath();req.optifineAction="remove";
@@ -150,13 +150,13 @@ private slots:
     }
     void optifineComponentParticipatesInLocalConflictChecks() {
         mc::Instance instance;instance.version="1.20.1";instance.loader="forge";instance.loaderVersion="47.2.18";instance.optifineVersion="HD_U_I6";instance.optifineForgeVersion="47.2.18";instance.optifineSha512="verified";
-        mc::LocalMod of;of.known=true;of.id="optifine";of.name="OptiFine";of.ids={"optifine"};of.sha512="verified";
+        mc::LocalMod of;of.known=true;of.id="optifine";of.name="OptiFine";of.ids=QStringList{"optifine"};of.sha512="verified";
         QVERIFY(mc::modEnvironmentProblem(of,instance).isEmpty());of.sha512="changed";QVERIFY(!mc::modEnvironmentProblem(of,instance).isEmpty());
-        mc::LocalMod iris;iris.known=true;iris.id="iris";iris.ids={"iris"};iris.name="Iris";iris.loader="forge";
+        mc::LocalMod iris;iris.known=true;iris.id="iris";iris.ids=QStringList{"iris"};iris.name="Iris";iris.loader="forge";
         QVERIFY(!mc::checkModSet(instance,{iris}).errors.isEmpty());
     }
     void loggingConfigurationIsAnEncodedFileUrl() {
-        QTemporaryDir dir;mc::GamePlan plan;plan.classpath={"client.jar"};
+        QTemporaryDir dir;mc::GamePlan plan;plan.classpath=QStringList{"client.jar"};
         plan.loggingArgument="-Dlog4j.configurationFile=C:/Game Folder/log.xml";
         QJsonObject metadata{{"mainClass","example.Main"}};
         const auto root=QFileInfo(dir.path()).canonicalFilePath();
@@ -186,7 +186,7 @@ private slots:
         QVERIFY_EXCEPTION_THROWN(mc::verifyForgeOutputs(metadata,QFileInfo(dir.path()).canonicalFilePath()),std::exception);
     }
     void forgeIgnoreListUsesActualClientJarName() {
-        QTemporaryDir dir;mc::GamePlan plan;plan.classpath={"classes"};
+        QTemporaryDir dir;mc::GamePlan plan;plan.classpath=QStringList{"classes"};
         QJsonObject metadata{{"id","upstream-forge-id"},{"mainClass","Main"},{"arguments",QJsonObject{{"jvm",QJsonArray{"-DignoreList=${version_name}.jar","-cp","${classpath}"}}}}};
         const auto command=mc::offlineCommand(metadata,plan,QFileInfo(dir.path()).canonicalFilePath(),"my-instance",QFileInfo(dir.path()).canonicalFilePath(),"java","Tester",1024,mc::GamePlatform::current());
         QVERIFY(command.arguments.contains("-DignoreList=my-instance.jar"));
@@ -220,7 +220,7 @@ private slots:
         QVERIFY(save(root+"/LaunchArgumentsProbe.java",source));QProcess compiler;compiler.start(home+"/bin/javac",{"-encoding","UTF-8","-d",root+"/classes",root+"/LaunchArgumentsProbe.java"});QVERIFY(compiler.waitForFinished(30000));QVERIFY2(compiler.exitCode()==0,compiler.readAllStandardError().constData());
         mc::LaunchOptions options;options.autoMemory=false;options.maxMemoryMiB=768;options.minMemoryMiB=128;options.jvmArguments="-XX:+UseG1GC -Dm2cl.probe=\"value with spaces\"";options.gameArguments="--server localhost --port 25565";options.customResolution=true;options.width=1280;options.height=720;options.fullscreen=true;
         QString error;QVERIFY2(mc::saveInstanceRuntimeSettings(root,{{"mode","auto"}},options,&error),qPrintable(error));const auto loaded=mc::loadInstanceLaunchOptions(root,2048,&error);QVERIFY(error.isEmpty());
-        mc::GamePlan plan;plan.classpath={"classes"};const QJsonObject metadata{{"id","test"},{"mainClass","LaunchArgumentsProbe"},{"arguments",QJsonObject{{"jvm",QJsonArray{"-cp","${classpath}"}},{"game",QJsonArray{"--username","${auth_player_name}"}}}}};
+        mc::GamePlan plan;plan.classpath=QStringList{"classes"};const QJsonObject metadata{{"id","test"},{"mainClass","LaunchArgumentsProbe"},{"arguments",QJsonObject{{"jvm",QJsonArray{"-cp","${classpath}"}},{"game",QJsonArray{"--username","${auth_player_name}"}}}}};
         const auto command=mc::offlineCommand(metadata,plan,root,"id",root,home+"/bin/java","Tester",loaded.maxMemoryMiB,mc::GamePlatform::current(),loaded);
         QProcess java;java.setWorkingDirectory(command.directory);java.start(command.executable,command.arguments);QVERIFY(java.waitForFinished(30000));const auto output=java.readAllStandardOutput();QVERIFY2(java.exitCode()==0,java.readAllStandardError().constData());
         QVERIFY2(output.contains("heap=768"),output.constData());QVERIFY2(output.contains("initial=130")||output.contains("initial=128"),output.constData());QVERIFY(output.contains("property=value with spaces"));QVERIFY(output.contains("--width|1280|--height|720|--fullscreen|--server|localhost|--port|25565"));qInfo().noquote()<<output;
@@ -233,7 +233,7 @@ private slots:
         QString error;const auto split=mc::splitLaunchArguments("-Dlabel=\"hello world\" --add-opens java.base/java.lang=ALL-UNNAMED\n-Dpath=C:\\Games\\Minecraft 'single quoted'",&error);
         QVERIFY(error.isEmpty());QCOMPARE(split,QStringList({"-Dlabel=hello world","--add-opens","java.base/java.lang=ALL-UNNAMED","-Dpath=C:\\Games\\Minecraft","single quoted"}));
         mc::splitLaunchArguments("-Dlabel=\"unfinished",&error);QVERIFY(!error.isEmpty());
-        QTemporaryDir dir;const auto root=QFileInfo(dir.path()).canonicalFilePath();mc::GamePlan plan;plan.classpath={"classes"};
+        QTemporaryDir dir;const auto root=QFileInfo(dir.path()).canonicalFilePath();mc::GamePlan plan;plan.classpath=QStringList{"classes"};
         const QJsonObject metadata{{"id","1.20.1"},{"mainClass","example.Main"},{"arguments",QJsonObject{{"jvm",QJsonArray{"-cp","${classpath}"}},{"game",QJsonArray{"--username","${auth_player_name}","--width","854","--height","480"}}}}};
         mc::LaunchOptions options;options.maxMemoryMiB=4096;options.minMemoryMiB=512;options.customResolution=true;options.width=1280;options.height=720;options.fullscreen=true;options.jvmArguments="-Dlabel=\"hello world\" -XX:+UseG1GC";options.gameArguments="--server \"my server\" --port 25565";
         const auto command=mc::offlineCommand(metadata,plan,root,"id",root,"java","Player",4096,{"linux","x86_64",""},options);
