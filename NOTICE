@@ -1,0 +1,22 @@
+Mercury MC Launcher (M²CL)
+Original project author: ppm203
+Copyright (C) 2026 ppm203
+
+Original project source code is licensed under GNU GPL version 3 only,
+supplemented by the section 7 terms in ADDITIONAL_TERMS.md.
+See LICENSE for the complete GPLv3 text. The software is provided without
+warranty, as described in GPLv3 sections 15 and 16.
+
+Redistributed modified versions must preserve the applicable attribution and
+licensing notices and reasonably identify themselves as third-party modified
+versions. Changes by others must not be represented as changes approved or
+provided by the original author. See ADDITIONAL_TERMS.md for the precise terms.
+
+Third-party components retain their own licenses and notices:
+- MD4C 0.5.2: Copyright (c) 2016-2024 Martin Mitáš; MIT license.
+  The original notice is in third_party/md4c/LICENSE.md, copied to
+  md4c-LICENSE.md in the application's licenses directory.
+- Qt and zlib retain their upstream licenses and notices. Deployments must
+  preserve the notices for the specific libraries and plugins they distribute.
+- Downloaded game files, loaders, Java runtimes, mods, shaders and resource
+  packs, and third-party compatibility data are not relicensed by this notice.

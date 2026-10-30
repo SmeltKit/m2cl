@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1300 1300">
+  <title>M²CL — Mercury MC Launcher</title>
+  <desc>Layered M with a centered elevated view, a mint orbit and a small block.</desc>
+  <defs>
+    <linearGradient id="paleLeft" x1="220" y1="330" x2="650" y2="1060" gradientUnits="userSpaceOnUse"><stop stop-color="#f4f4e8"/><stop offset="1" stop-color="#d7ded2"/></linearGradient>
+    <linearGradient id="paleRight" x1="650" y1="100" x2="1075" y2="900" gradientUnits="userSpaceOnUse"><stop stop-color="#e3e8db"/><stop offset="1" stop-color="#aebfb4"/></linearGradient>
+    <linearGradient id="mint" x1="375" y1="290" x2="925" y2="950" gradientUnits="userSpaceOnUse"><stop stop-color="#8cedb7"/><stop offset="1" stop-color="#36b38c"/></linearGradient>
+    <linearGradient id="darkLeft" x1="275" y1="350" x2="650" y2="820" gradientUnits="userSpaceOnUse"><stop stop-color="#12594b"/><stop offset="1" stop-color="#063f36"/></linearGradient>
+    <linearGradient id="darkRight" x1="650" y1="620" x2="1025" y2="350" gradientUnits="userSpaceOnUse"><stop stop-color="#12584a"/><stop offset="1" stop-color="#03372f"/></linearGradient>
+    <linearGradient id="ring" x1="110" y1="960" x2="1190" y2="540" gradientUnits="userSpaceOnUse"><stop stop-color="#6fdfb5"/><stop offset=".5" stop-color="#b0f8d2"/><stop offset="1" stop-color="#48c79e"/></linearGradient>
+  </defs>
+  <g transform="translate(0 40)">
+    <!-- Rear half of the orbit is occluded by the monogram. -->
+    <path d="M220 722 C-80 974 258 1080 788 882 C1090 770 1336 548 1172 493 C1080 460 968 487 866 518" fill="none" stroke="#249f7c" stroke-width="42"/>
+    <path d="M220 711 C-80 963 258 1069 788 871 C1090 759 1336 537 1172 482 C1080 449 968 476 866 507" fill="none" stroke="url(#ring)" stroke-width="36"/>
+    <!-- Pale rear layer, preserving the original central ridge and silhouette. -->
+    <path d="M220 325 650 70 1075 325 1075 850 650 1120 220 850Z" fill="url(#paleRight)"/>
+    <path d="M220 325 650 70 650 1060 220 850Z" fill="url(#paleLeft)"/>
+    <path d="M220 325 650 70 650 235 275 465Z" fill="#f7f7ed"/>
+    <path d="M650 70 1075 325 1025 465 650 235Z" fill="#e0e6da"/>
+    <path d="M275 465 650 235 650 500 400 650Z" fill="#e4e9dc"/>
+    <path d="M650 235 1025 465 900 650 650 500Z" fill="#cbd6c8"/>
+    <path d="M220 850 650 1060 650 1120Z" fill="#bac9bd"/>
+    <path d="M650 1060 1075 850 650 1120Z" fill="#a9bcb0"/>
+    <!-- Two closely fitted green layers; aligned stems and mirrored top faces. -->
+    <path d="M275 350 375 292 497 365 497 510 650 600 803 510 803 365 925 292 1025 350 1025 830 900 905 803 930 803 685 650 798 497 685 497 930 400 905 275 830Z" fill="url(#mint)"/>
+    <path d="M275 350 375 292 497 365 400 423Z" fill="#8debb7"/>
+    <path d="M803 365 925 292 1025 350 900 423Z" fill="#68d9aa"/>
+    <path d="M400 423 497 365 497 510 650 600 650 650Z" fill="#47b68c"/>
+    <path d="M650 600 803 510 803 365 900 423 650 650Z" fill="#84e9b6"/>
+    <!-- Inner V top faces join the rear fold to the front M ridge. -->
+    <path d="M497 405 650 495 650 600 497 495Z" fill="#a8ddbf"/>
+    <path d="M650 495 803 405 803 495 650 600Z" fill="#bcf3cf"/>
+    <path d="M275 350 400 423 650 600 650 752 400 562 400 905 275 830Z" fill="url(#darkLeft)"/>
+    <path d="M650 600 900 423 1025 350 1025 830 900 905 900 562 650 752Z" fill="url(#darkRight)"/>
+    <path id="innerLeftLeg" d="M400 562 497 635 497 930 400 905Z" fill="#5bd1a3"/>
+    <path d="M400 562 497 635 497 930 400 905Z" transform="translate(1300 0) scale(-1 1)" fill="#2ca583"/>
+    <path d="M497 635 650 752 803 635 803 685 650 798 497 685Z" fill="#67d5a9"/>
+    <!-- Foreground orbit follows the reference's rising lower arc. -->
+    <path d="M220 711 C-80 963 258 1069 788 871 C915 824 1010 772 1084 718" fill="none" stroke="#229c79" stroke-width="43"/>
+    <path d="M220 700 C-80 952 258 1058 788 860 C915 813 1010 761 1084 707" fill="none" stroke="url(#ring)" stroke-width="35"/>
+    <!-- Orbiting Minecraft-style block. -->
+    <path d="M960 740 1054 685 1143 738 1050 794Z" fill="#a3f2c9"/>
+    <path d="M960 740 1050 794 1050 892 960 838Z" fill="#65d9ad"/>
+    <path d="M1050 794 1143 738 1143 836 1050 892Z" fill="#229b7a"/>
+  </g>
+</svg>

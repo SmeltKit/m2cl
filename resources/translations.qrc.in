@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/translations">
+    <file alias="m2cl_en_US.qm">@CMAKE_CURRENT_BINARY_DIR@/m2cl_en_US.qm</file>
+    <file alias="m2cl_zh_CN.qm">@CMAKE_CURRENT_BINARY_DIR@/m2cl_zh_CN.qm</file>
+    <file alias="m2cl_zh_TW.qm">@CMAKE_CURRENT_BINARY_DIR@/m2cl_zh_TW.qm</file>
+  </qresource>
+</RCC>

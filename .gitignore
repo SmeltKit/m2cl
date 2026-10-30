@@ -1,0 +1,58 @@
+# Downloaded toolchains and generated builds
+/.deps/
+/build*/
+/cmake-build-*/
+/out/
+/CMakeFiles/
+/CMakeCache.txt
+/compile_commands.json
+CMakeUserPresets.json
+*.app/
+*.dSYM/
+
+# Local screenshots, diagnostics and original design references
+/artifacts/
+/docs/ui-reference/
+/docs/internal/
+/assets/covers/drafts-v1/
+/assets/covers/prompts*.json
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+!.env.template
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+/credentials*.json
+
+# Local launcher and game data
+/.minecraft/
+/instances/
+/java/
+/runtime/
+/settings.json
+/accounts.json
+/accounts.lock
+.m2cl-instance.json
+.m2cl-mods.json
+.m2cl-mod-backups/
+
+# Editor, operating system and tool caches
+/.idea/
+/.vscode/
+.DS_Store
+*.user
+*.swp
+*.swo
+*.tmp
+*.log
+*.part
+*.download
+__pycache__/
+*.py[cod]
+.pytest_cache/

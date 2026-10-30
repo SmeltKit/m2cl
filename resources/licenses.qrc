@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/legal">
+    <file alias="GPL-3.0.txt">../LICENSE</file>
+    <file alias="ADDITIONAL_TERMS.md">../ADDITIONAL_TERMS.md</file>
+    <file alias="NOTICE">../NOTICE</file>
+    <file alias="md4c-LICENSE.md">../third_party/md4c/LICENSE.md</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Mercury MC Launcher
+Comment=Minecraft launcher
+Exec=m2cl
+Icon=m2cl
+Terminal=false
+Categories=Game;
+StartupWMClass=mclauncher
