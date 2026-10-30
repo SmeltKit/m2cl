@@ -32,6 +32,7 @@ QList<QUrl> downloadCandidates(const QUrl &official, const QString &source) {
         else if (host == "libraries.minecraft.net") { prefix = "/libraries"; mapped = true; }
         else if (host == "maven.minecraftforge.net" || host == "maven.fabricmc.net") { prefix = "/maven"; mapped = true; }
         else if (host == "meta.fabricmc.net") { prefix = "/fabric-meta"; mapped = true; }
+        else if (host == "authlib-injector.yushi.moe") { prefix = "/mirrors/authlib-injector"; mapped = true; }
         if (host == "files.minecraftforge.net" && official.path().startsWith("/maven/")) mapped = true;
         if (mapped) { mirror = official; mirror.setHost("bmclapi2.bangbang93.com"); mirror.setPort(-1); mirror.setPath(prefix + official.path()); }
     }

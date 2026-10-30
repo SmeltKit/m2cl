@@ -8,6 +8,7 @@
 #include "forgeinstaller.h"
 #include "optifine.h"
 #include "downloadsource.h"
+#include "offlineskin.h"
 #include "core/java.h"
 #include "core/catalog.h"
 #include "core/memory.h"
@@ -421,6 +422,8 @@ InstallResult prepareGame(const InstallRequest &input, const CancelFlag &cancell
         }
         auto identity=req.identity;if(identity.name.isEmpty())identity.name=req.player;
         result.command = gameCommand(metadata, plan, req.root, req.id, req.directory, java.executable, identity, memory, platform,req.launchOptions);result.command.memoryNote=memoryNote;
+        const auto skinArguments=prepareOfflineSkin(req,java,cancelled,progress,network);
+        for(int n=skinArguments.size()-1;n>=0;--n)result.command.arguments.prepend(skinArguments.at(n));
         worker.check();if(!originalMetadata.isEmpty()&&read(path)!=originalMetadata)fail(QCoreApplication::translate("M2CL", "安装过程中版本配置已被修改，请重新确认"));
         write(path,QJsonDocument(metadata).toJson());optifineChange.finish();
         result.instancePath = checkedPath(req.root, "versions/" + req.id); result.java = java.executable; result.javaRuntime = java;

@@ -18,6 +18,7 @@ public:
     QList<Account> accounts() const{return m_accounts;}
     Account current() const;
     QString state(const Account &account) const;
+    bool requiresLogin(const Account &account) const;
     QString loadError() const{return m_loadError;}
     QString vaultName() const{return m_vault->name();}
     bool canRemember() const{return m_vault->available();}
@@ -25,6 +26,7 @@ public:
     bool canCancel() const{return !m_jobPending;}
     bool hasPendingSession() const{return !m_pending.account.id.isEmpty();}
     QString addOffline(const QString &name);
+    QString setOfflineSkin(const QString &id,const QJsonObject &skin);
     QString select(const QString &id);
     void remove(const QString &id);
     void login(const QString &clientId,bool remember,const QString &expectedId={});

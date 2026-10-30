@@ -13,6 +13,7 @@ struct Account {
     QString id, name, uuid, clientId;
     bool microsoft=false, remembered=false, needsLogin=false;
     QUrl skinUrl;
+    QJsonObject offlineSkin;
 };
 struct GameIdentity {
     QString name, uuid, accessToken, xuid, clientId;

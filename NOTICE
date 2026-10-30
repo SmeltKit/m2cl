@@ -29,3 +29,13 @@ Third-party components retain their own licenses and notices:
   for the specific zlib binary they distribute.
 - Downloaded game files, loaders, Java runtimes, mods, shaders and resource
   packs, and third-party compatibility data are not relicensed by this notice.
+- Steve and Alex preview textures: Minecraft assets, copyright Mojang AB.
+  These unchanged textures are not covered by the application's GPL grant.
+  See assets/skins/NOTICE.txt in the source distribution.
+- Optional offline skin support downloads unmodified authlib-injector 1.2.8
+  (build 56), copyright Haowei Wen and contributors, from its upstream or
+  BMCLAPI mirror and verifies its pinned SHA-256. It is not bundled in this app.
+  Upstream source and AGPLv3-or-later with the authlib-injector exception:
+  https://github.com/yushijinhun/authlib-injector
+  The separate M2CL skin bootstrap is covered by this project's license;
+  its Java source and license notices are also embedded in its small JAR.

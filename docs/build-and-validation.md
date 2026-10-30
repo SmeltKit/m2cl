@@ -93,3 +93,29 @@ that source snapshot, with equivalent access. This command performs no network
 requests and does not publish anything. Qt source archives are not added to
 the application bundle. The current project has not completed standalone
 package, signing or installer validation on every platform.
+
+## Offline skin bootstrap
+
+Normal C++ builds use the small checked-in `resources/skin-agent/m2cl-skin-agent.jar`.
+Its original Java source is `tools/skin-agent/SkinAgent.java` and is also embedded
+in the JAR with the project license and additional terms. To rebuild after a
+source change, use a JDK 9+ compiler targeting Java 8:
+
+```sh
+python3 tools/build_skin_agent.py --javac /path/to/jdk/bin/javac
+python3 tools/check_skin_agent.py
+```
+
+The bootstrap runs inside the game JVM, provides signed skin textures on a
+random loopback port, and loads the unchanged, pinned authlib-injector agent.
+The external agent is downloaded on first use and checked against its upstream
+SHA-256; it is not embedded in M²CL. The default-skin choice does not load either
+agent. The local service has no authentication or successful join endpoints.
+
+`skin_tests` checks PNG validation, stored copies, per-player persistence,
+preview layout and launch guards. `skin_agent_bundle` checks source/bytecode and
+notice consistency. The opt-in `tests/java/SkinAgentProbe.java` verifies signed
+profiles and real Mojang authlib skin loading. A cached game launch can also be
+checked with `game_probe ROOT 1.20.1 --cached --launch --skin=alex-slim`; this uses
+only the supplied test root. GUI gameplay and all legacy versions still need
+separate validation.

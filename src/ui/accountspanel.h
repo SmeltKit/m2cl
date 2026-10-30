@@ -14,6 +14,8 @@ class QTableWidget;
 namespace mc {
 class NetworkNotice;
 class BusySpinner;
+class AvatarCache;
+class AccountAvatar;
 class MicrosoftLoginDialog final:public InstallPlanDialog {
     Q_OBJECT
 public:
@@ -38,17 +40,22 @@ private:
 class AccountsPanel final:public QWidget {
     Q_OBJECT
 public:
-    AccountsPanel(AccountManager &manager,Settings &settings,SettingsStore store,QWidget *parent=nullptr);
+    AccountsPanel(AccountManager &manager,AvatarCache &avatars,Settings &settings,SettingsStore store,QWidget *parent=nullptr);
     void showConfiguration();
     static QString configuredClientId(const Settings &settings);
-private:
-    void refresh();
     void login(const QString &id={});
     void addOffline();
+    void editSkin(const QString &id);
+signals:
+    void configurationRequested();
+private:
+    void refresh();
     AccountManager &m_manager;
+    AvatarCache &m_avatars;
     Settings &m_settings;
     SettingsStore m_store;
-    QLabel *m_current;
+    QLabel *m_current,*m_currentState;
+    AccountAvatar *m_currentAvatar;
     QTableWidget *m_table;
     QPushButton *m_addMicrosoft,*m_addOffline;
     NetworkNotice *m_notice;

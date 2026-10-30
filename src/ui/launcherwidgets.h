@@ -97,6 +97,13 @@ class RoundedMenu final : public QMenu {
 public:
     explicit RoundedMenu(QWidget *parent = nullptr);
 };
+class RoundedPopup final : public QFrame {
+public:
+    explicit RoundedPopup(QWidget *parent=nullptr);
+protected:
+    void paintEvent(QPaintEvent *) override;
+    void keyPressEvent(QKeyEvent *event) override;
+};
 struct TableColumn {
     int index;
     int minimumWidth;

@@ -21,6 +21,11 @@ int main(int argc, char **argv) {
     const auto flag = std::make_shared<std::atomic_bool>(false);
     mc::InstallRequest request; request.root = QFileInfo(root).canonicalFilePath(); request.id = version + "-offline-probe";
     request.version = version; request.directory = QDir(request.root).filePath("versions/" + request.id); request.player = "OfflineTester";
+    request.launch=app.arguments().contains("--launch");
+    for(const auto &arg:app.arguments())if(arg.startsWith("--skin=")){
+        const auto skin=arg.mid(7);request.offlineSkin={{"source",skin.section('-',0,0)},{"model",skin.endsWith("-slim")?"slim":"classic"}};
+        request.launcherDirectory=QDir(request.root).filePath("m2cl-skin-probe");
+    }
     for(const auto &arg:app.arguments())if(arg.startsWith("--source="))request.downloadSource=arg.mid(9);
     for(const auto &arg:app.arguments())if(arg.startsWith("--fabric=")){request.loader="fabric";request.loaderVersion=arg.mid(9);}
     for(const auto &arg:app.arguments())for(const auto &loader:QStringList{"forge","neoforge","quilt"})if(arg.startsWith("--"+loader+"=")){request.loader=loader;request.loaderVersion=arg.mid(loader.size()+3);}

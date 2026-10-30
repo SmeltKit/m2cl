@@ -6378,6 +6378,190 @@ Copyright © The Qt Company Ltd. 及其他贡献者。完整许可与对应源�
             <numerusform>%n 个实例</numerusform>
         </translation>
     </message>
+    <message>
+        <source>角色头像</source>
+        <translation>角色头像</translation>
+    </message>
+    <message>
+        <source>选择游戏角色</source>
+        <translation>选择游戏角色</translation>
+    </message>
+    <message>
+        <source>登录微软账号或添加离线角色</source>
+        <translation>登录微软账号或添加离线角色</translation>
+    </message>
+    <message>
+        <source>微软账号 · %1</source>
+        <translation>微软账号 · %1</translation>
+    </message>
+    <message>
+        <source>离线角色 · 本地游玩</source>
+        <translation>离线角色 · 本地游玩</translation>
+    </message>
+    <message>
+        <source>切换角色 ▾</source>
+        <translation>切换角色 ▾</translation>
+    </message>
+    <message>
+        <source>管理账号</source>
+        <translation>管理账号</translation>
+    </message>
+    <message>
+        <source>使用角色 %1</source>
+        <translation>使用角色 %1</translation>
+    </message>
+    <message>
+        <source>切换角色</source>
+        <translation>切换角色</translation>
+    </message>
+    <message>
+        <source>输入玩家名</source>
+        <translation>输入玩家名</translation>
+    </message>
+    <message>
+        <source>皮肤或手臂模型设置无效</source>
+        <translation>皮肤或手臂模型设置无效</translation>
+    </message>
+    <message>
+        <source>本地皮肤记录无效</source>
+        <translation>本地皮肤记录无效</translation>
+    </message>
+    <message>
+        <source>请选择不超过 1 MiB 的 64×64 或 64×32 PNG 皮肤</source>
+        <translation>请选择不超过 1 MiB 的 64×64 或 64×32 PNG 皮肤</translation>
+    </message>
+    <message>
+        <source>64×32 旧版皮肤只支持经典手臂，请选择经典模型</source>
+        <translation>64×32 旧版皮肤只支持经典手臂，请选择经典模型</translation>
+    </message>
+    <message>
+        <source>PNG 皮肤无法解码</source>
+        <translation>PNG 皮肤无法解码</translation>
+    </message>
+    <message>
+        <source>无法读取皮肤文件，或文件超过 1 MiB</source>
+        <translation>无法读取皮肤文件，或文件超过 1 MiB</translation>
+    </message>
+    <message>
+        <source>无法保存启动器中的皮肤副本</source>
+        <translation>无法保存启动器中的皮肤副本</translation>
+    </message>
+    <message>
+        <source>皮肤文件不存在，请重新导入或恢复默认皮肤</source>
+        <translation>皮肤文件不存在，请重新导入或恢复默认皮肤</translation>
+    </message>
+    <message>
+        <source>皮肤文件校验失败，请重新导入</source>
+        <translation>皮肤文件校验失败，请重新导入</translation>
+    </message>
+    <message>
+        <source>请选择离线角色编辑皮肤</source>
+        <translation>请选择离线角色编辑皮肤</translation>
+    </message>
+    <message>
+        <source>无法保存本地皮肤运行文件</source>
+        <translation>无法保存本地皮肤运行文件</translation>
+    </message>
+    <message>
+        <source>自定义离线皮肤需要 Java 8 或更新版本，请切换 Java 或恢复默认皮肤</source>
+        <translation>自定义离线皮肤需要 Java 8 或更新版本，请切换 Java 或恢复默认皮肤</translation>
+    </message>
+    <message>
+        <source>此旧版本暂不支持自定义离线皮肤，请为该角色恢复默认皮肤</source>
+        <translation>此旧版本暂不支持自定义离线皮肤，请为该角色恢复默认皮肤</translation>
+    </message>
+    <message>
+        <source>Minecraft 1.8 之前不支持纤细手臂，请改用经典模型</source>
+        <translation>Minecraft 1.8 之前不支持纤细手臂，请改用经典模型</translation>
+    </message>
+    <message>
+        <source>正在准备离线角色皮肤</source>
+        <translation>正在准备离线角色皮肤</translation>
+    </message>
+    <message>
+        <source>皮肤支持组件 SHA-256 校验失败</source>
+        <translation>皮肤支持组件 SHA-256 校验失败</translation>
+    </message>
+    <message>
+        <source>此构建缺少本地皮肤支持组件</source>
+        <translation>此构建缺少本地皮肤支持组件</translation>
+    </message>
+    <message>
+        <source>皮肤模型预览</source>
+        <translation>皮肤模型预览</translation>
+    </message>
+    <message>
+        <source>编辑皮肤</source>
+        <translation>编辑皮肤</translation>
+    </message>
+    <message>
+        <source>拖动预览以旋转</source>
+        <translation>拖动预览以旋转</translation>
+    </message>
+    <message>
+        <source>皮肤来源</source>
+        <translation>皮肤来源</translation>
+    </message>
+    <message>
+        <source>游戏默认</source>
+        <translation>游戏默认</translation>
+    </message>
+    <message>
+        <source>本地 PNG 皮肤</source>
+        <translation>本地 PNG 皮肤</translation>
+    </message>
+    <message>
+        <source>手臂模型</source>
+        <translation>手臂模型</translation>
+    </message>
+    <message>
+        <source>经典 · 4 像素宽</source>
+        <translation>经典 · 4 像素宽</translation>
+    </message>
+    <message>
+        <source>纤细 · 3 像素宽（1.8+）</source>
+        <translation>纤细 · 3 像素宽（1.8+）</translation>
+    </message>
+    <message>
+        <source>选择皮肤 PNG…</source>
+        <translation>选择皮肤 PNG…</translation>
+    </message>
+    <message>
+        <source>只修改此离线角色，下次启动生效。多人游戏中的显示取决于服务器。</source>
+        <translation>只修改此离线角色，下次启动生效。多人游戏中的显示取决于服务器。</translation>
+    </message>
+    <message>
+        <source>选择皮肤 PNG</source>
+        <translation>选择皮肤 PNG</translation>
+    </message>
+    <message>
+        <source>无法保存皮肤</source>
+        <translation>无法保存皮肤</translation>
+    </message>
+    <message>
+        <source>无法导入皮肤</source>
+        <translation>无法导入皮肤</translation>
+    </message>
+    <message>
+        <source>请选择一张本地皮肤 PNG</source>
+        <translation>请选择一张本地皮肤 PNG</translation>
+    </message>
+    <message>
+        <source>皮肤需要处理</source>
+        <translation>皮肤需要处理</translation>
+    </message>
+    <message>
+        <source>默认外观由游戏版本与角色 UUID 决定，此处为示意预览</source>
+        <translation>默认外观由游戏版本与角色 UUID 决定，此处为示意预览</translation>
+    </message>
+    <message>
+        <source>支持 64×64 PNG；64×32 旧版皮肤使用经典手臂。皮肤副本保存在启动器中。</source>
+        <translation>支持 64×64 PNG；64×32 旧版皮肤使用经典手臂。皮肤副本保存在启动器中。</translation>
+    </message>
+    <message>
+        <source>已保存本地皮肤副本</source>
+        <translation>已保存本地皮肤副本</translation>
+    </message>
 </context>
 <context>
     <name>QDialogButtonBox</name>

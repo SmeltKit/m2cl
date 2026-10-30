@@ -6379,6 +6379,190 @@ Request: </translation>
             <numerusform>%n instances</numerusform>
         </translation>
     </message>
+    <message>
+        <source>角色头像</source>
+        <translation>Player avatar</translation>
+    </message>
+    <message>
+        <source>选择游戏角色</source>
+        <translation>Choose a player</translation>
+    </message>
+    <message>
+        <source>登录微软账号或添加离线角色</source>
+        <translation>Sign in with Microsoft or add an offline player</translation>
+    </message>
+    <message>
+        <source>微软账号 · %1</source>
+        <translation>Microsoft account · %1</translation>
+    </message>
+    <message>
+        <source>离线角色 · 本地游玩</source>
+        <translation>Offline player · Local play</translation>
+    </message>
+    <message>
+        <source>切换角色 ▾</source>
+        <translation>Switch player ▾</translation>
+    </message>
+    <message>
+        <source>管理账号</source>
+        <translation>Manage accounts</translation>
+    </message>
+    <message>
+        <source>使用角色 %1</source>
+        <translation>Playing as %1</translation>
+    </message>
+    <message>
+        <source>切换角色</source>
+        <translation>Switch player</translation>
+    </message>
+    <message>
+        <source>输入玩家名</source>
+        <translation>Enter a player name</translation>
+    </message>
+    <message>
+        <source>皮肤或手臂模型设置无效</source>
+        <translation>Invalid skin or arm model settings</translation>
+    </message>
+    <message>
+        <source>本地皮肤记录无效</source>
+        <translation>Invalid local skin record</translation>
+    </message>
+    <message>
+        <source>请选择不超过 1 MiB 的 64×64 或 64×32 PNG 皮肤</source>
+        <translation>Choose a 64×64 or 64×32 PNG skin no larger than 1 MiB</translation>
+    </message>
+    <message>
+        <source>64×32 旧版皮肤只支持经典手臂，请选择经典模型</source>
+        <translation>Legacy 64×32 skins require the classic arm model</translation>
+    </message>
+    <message>
+        <source>PNG 皮肤无法解码</source>
+        <translation>The PNG skin could not be decoded</translation>
+    </message>
+    <message>
+        <source>无法读取皮肤文件，或文件超过 1 MiB</source>
+        <translation>Cannot read the skin file, or it exceeds 1 MiB</translation>
+    </message>
+    <message>
+        <source>无法保存启动器中的皮肤副本</source>
+        <translation>Cannot save the launcher’s skin copy</translation>
+    </message>
+    <message>
+        <source>皮肤文件不存在，请重新导入或恢复默认皮肤</source>
+        <translation>Skin file missing. Import it again or restore the default skin</translation>
+    </message>
+    <message>
+        <source>皮肤文件校验失败，请重新导入</source>
+        <translation>Skin checksum failed. Import the skin again</translation>
+    </message>
+    <message>
+        <source>请选择离线角色编辑皮肤</source>
+        <translation>Select an offline player to edit its skin</translation>
+    </message>
+    <message>
+        <source>无法保存本地皮肤运行文件</source>
+        <translation>Cannot save the local skin runtime files</translation>
+    </message>
+    <message>
+        <source>自定义离线皮肤需要 Java 8 或更新版本，请切换 Java 或恢复默认皮肤</source>
+        <translation>Custom offline skins require Java 8 or later. Change Java or restore the default skin</translation>
+    </message>
+    <message>
+        <source>此旧版本暂不支持自定义离线皮肤，请为该角色恢复默认皮肤</source>
+        <translation>Custom offline skins are not supported on this legacy version. Restore the default skin</translation>
+    </message>
+    <message>
+        <source>Minecraft 1.8 之前不支持纤细手臂，请改用经典模型</source>
+        <translation>Minecraft versions before 1.8 do not support slim arms. Use the classic model</translation>
+    </message>
+    <message>
+        <source>正在准备离线角色皮肤</source>
+        <translation>Preparing the offline player’s skin</translation>
+    </message>
+    <message>
+        <source>皮肤支持组件 SHA-256 校验失败</source>
+        <translation>Skin support component failed SHA-256 verification</translation>
+    </message>
+    <message>
+        <source>此构建缺少本地皮肤支持组件</source>
+        <translation>This build is missing the local skin support component</translation>
+    </message>
+    <message>
+        <source>皮肤模型预览</source>
+        <translation>Skin model preview</translation>
+    </message>
+    <message>
+        <source>编辑皮肤</source>
+        <translation>Edit skin</translation>
+    </message>
+    <message>
+        <source>拖动预览以旋转</source>
+        <translation>Drag the preview to rotate</translation>
+    </message>
+    <message>
+        <source>皮肤来源</source>
+        <translation>Skin source</translation>
+    </message>
+    <message>
+        <source>游戏默认</source>
+        <translation>Game default</translation>
+    </message>
+    <message>
+        <source>本地 PNG 皮肤</source>
+        <translation>Local PNG skin</translation>
+    </message>
+    <message>
+        <source>手臂模型</source>
+        <translation>Arm model</translation>
+    </message>
+    <message>
+        <source>经典 · 4 像素宽</source>
+        <translation>Classic · 4-pixel arms</translation>
+    </message>
+    <message>
+        <source>纤细 · 3 像素宽（1.8+）</source>
+        <translation>Slim · 3-pixel arms (1.8+)</translation>
+    </message>
+    <message>
+        <source>选择皮肤 PNG…</source>
+        <translation>Choose skin PNG…</translation>
+    </message>
+    <message>
+        <source>只修改此离线角色，下次启动生效。多人游戏中的显示取决于服务器。</source>
+        <translation>Applies to this offline player on the next launch. Visibility in multiplayer depends on the server.</translation>
+    </message>
+    <message>
+        <source>选择皮肤 PNG</source>
+        <translation>Choose skin PNG</translation>
+    </message>
+    <message>
+        <source>无法保存皮肤</source>
+        <translation>Cannot save skin</translation>
+    </message>
+    <message>
+        <source>无法导入皮肤</source>
+        <translation>Cannot import skin</translation>
+    </message>
+    <message>
+        <source>请选择一张本地皮肤 PNG</source>
+        <translation>Choose a local skin PNG</translation>
+    </message>
+    <message>
+        <source>皮肤需要处理</source>
+        <translation>Skin needs attention</translation>
+    </message>
+    <message>
+        <source>默认外观由游戏版本与角色 UUID 决定，此处为示意预览</source>
+        <translation>The game version and player UUID determine the default appearance. This preview is illustrative.</translation>
+    </message>
+    <message>
+        <source>支持 64×64 PNG；64×32 旧版皮肤使用经典手臂。皮肤副本保存在启动器中。</source>
+        <translation>Supports 64×64 PNG skins. Legacy 64×32 skins use classic arms. A copy is stored in the launcher.</translation>
+    </message>
+    <message>
+        <source>已保存本地皮肤副本</source>
+        <translation>Local skin copy saved</translation>
+    </message>
 </context>
 <context>
     <name>QDialogButtonBox</name>

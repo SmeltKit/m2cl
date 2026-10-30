@@ -59,6 +59,7 @@ add_library(launcher_core
     src/core/i18n.cpp src/core/i18n.h
     "${CMAKE_CURRENT_BINARY_DIR}/translations.qrc"
     src/core/accounts.cpp src/core/accounts.h
+    src/core/skins.cpp src/core/skins.h resources/skins.qrc
     src/core/compatibility.cpp src/core/compatibility.h
     src/core/packs.cpp src/core/packs.h
     src/core/memory.cpp src/core/memory.h
@@ -74,9 +75,10 @@ add_library(launcher_core
 )
 add_dependencies(launcher_core translations)
 target_include_directories(launcher_core PUBLIC src)
-target_link_libraries(launcher_core PUBLIC Qt${QT_MAJOR}::Core ZLIB::ZLIB)
+target_link_libraries(launcher_core PUBLIC Qt${QT_MAJOR}::Core Qt${QT_MAJOR}::Gui ZLIB::ZLIB)
 
 add_library(launcher_network src/network/accountmanager.cpp src/network/accountmanager.h src/network/microsoftauth.cpp src/network/microsoftauth.h src/network/credentialvault.cpp src/network/credentialvault.h src/network/networkerror.cpp src/network/networkerror.h src/network/downloadsource.cpp src/network/downloadsource.h src/network/optifine.cpp src/network/optifine.h src/network/resourceclient.cpp src/network/resourceclient.h
+    src/network/offlineskin.cpp src/network/offlineskin.h
     src/network/modinstaller.cpp src/network/modinstaller.h
     src/network/gameinstaller.cpp src/network/gameinstaller.h
     src/network/forgeinstaller.cpp src/network/forgeinstaller.h
@@ -98,6 +100,8 @@ set(M2CL_MICROSOFT_CLIENT_ID "796724ab-c62a-48dd-983b-d6fecf88ce48" CACHE STRING
 add_library(launcher_ui
     src/ui/projectlegal.cpp src/ui/projectlegal.h
     src/ui/accountspanel.cpp src/ui/accountspanel.h
+    src/ui/accountwidgets.cpp src/ui/accountwidgets.h
+    src/ui/skineditor.cpp src/ui/skineditor.h
     src/ui/networknotice.cpp src/ui/networknotice.h
     src/ui/versioncomponentsdialog.cpp src/ui/versioncomponentsdialog.h
     src/ui/launchoptionswidget.cpp src/ui/launchoptionswidget.h
@@ -177,6 +181,7 @@ if(BUILD_TESTING)
     if(Python3_Interpreter_FOUND)
         add_test(NAME translation_catalogs COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/check_translations.py)
         add_test(NAME legal_materials COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tests/legal_tests.py)
+        add_test(NAME skin_agent_bundle COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/tools/check_skin_agent.py)
     endif()
     add_executable(core_tests tests/core_tests.cpp)
     target_link_libraries(core_tests PRIVATE launcher_core Qt${QT_MAJOR}::Test)
@@ -199,6 +204,18 @@ if(BUILD_TESTING)
     add_executable(mod_install_probe EXCLUDE_FROM_ALL tests/mod_install_probe.cpp)
     target_link_libraries(mod_install_probe PRIVATE launcher_network)
     add_executable(ui_tests tests/ui_tests.cpp)
+    add_executable(account_ui_tests tests/account_ui_tests.cpp)
+    add_executable(skin_tests tests/skin_tests.cpp)
+    target_link_libraries(skin_tests PRIVATE launcher_ui Qt${QT_MAJOR}::Test)
+    add_test(NAME skin_tests COMMAND skin_tests)
+    set_tests_properties(skin_tests PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+    target_link_libraries(account_ui_tests PRIVATE launcher_ui Qt${QT_MAJOR}::Test)
+    if(MSVC)
+        target_compile_options(account_ui_tests PRIVATE /utf-8)
+        target_compile_options(skin_tests PRIVATE /utf-8)
+    endif()
+    add_test(NAME account_ui_tests COMMAND account_ui_tests)
+    set_tests_properties(account_ui_tests PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
     target_link_libraries(ui_tests PRIVATE launcher_ui Qt${QT_MAJOR}::Test)
     add_test(NAME ui_tests COMMAND ui_tests)
     set_tests_properties(ui_tests PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")

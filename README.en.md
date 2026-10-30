@@ -79,6 +79,12 @@ See the [build guide](docs/build-and-validation.md) for testing and deployment n
 
 ## Data, services and accounts
 
+Offline-player skins support game defaults, Steve, Alex and local PNG files,
+classic or slim arms, and a rotatable preview. Settings belong to each player;
+the launcher does not replace game JARs or change player UUIDs. First use of a
+custom offline skin downloads a SHA-256-verified skin support agent. This
+feature requires Java 8+ and Minecraft 1.7.2+; slim arms require Minecraft 1.8+.
+
 - Settings use the platform's application configuration directory; `--data-dir` selects an isolated directory. Runtime and launch settings belong to each instance.
 - Java downloads support Temurin, Zulu, Microsoft OpenJDK and Oracle OpenJDK. Minecraft's official runtime channel is used separately for automatic provisioning.
 - The resource market currently uses Modrinth. CurseForge integration and an application-owned API key are planned after the first complete version.

@@ -38,6 +38,9 @@ CMakeUserPresets.json
 /settings.json
 /accounts.json
 /accounts.lock
+/logs/
+/skins/
+/skin-runtime/
 .m2cl-instance.json
 .m2cl-mods.json
 .m2cl-mod-backups/

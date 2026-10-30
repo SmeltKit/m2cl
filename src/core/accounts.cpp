@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include "accounts.h"
 #include "gameplan.h"
+#include "skins.h"
 #include <QCryptographicHash>
 #include <QDir>
 #include <QFile>
@@ -23,12 +24,13 @@ QString accountProblem(const Account &a){
     if(!validPlayerName(a.name)||!QRegularExpression("^[0-9a-f]{32}$").match(a.uuid).hasMatch())return QCoreApplication::translate("M2CL", "角色名称或 UUID 无效");
     if(a.id!=(a.microsoft?"microsoft:":"offline:")+a.uuid)return QCoreApplication::translate("M2CL", "账号标识无效");
     if(!a.microsoft&&a.uuid!=offlineUuid(a.name))return QCoreApplication::translate("M2CL", "离线角色 UUID 与名称不匹配");
+    if(!a.microsoft&&!skinSettingsProblem(a.offlineSkin).isEmpty())return skinSettingsProblem(a.offlineSkin);
     if(a.microsoft&&!QRegularExpression("^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$").match(a.clientId).hasMatch())return QCoreApplication::translate("M2CL", "微软应用 ID 无效");
     return {};
 }
 QJsonObject accountJson(const Account &a){
     return {{"id",a.id},{"type",a.microsoft?"microsoft":"offline"},{"name",a.name},{"uuid",a.uuid},{"clientId",a.microsoft?a.clientId:QString()},
-            {"remembered",a.microsoft&&a.remembered},{"needsLogin",a.needsLogin},{"skinUrl",a.skinUrl.toString()}};
+            {"remembered",a.microsoft&&a.remembered},{"needsLogin",a.needsLogin},{"skinUrl",a.skinUrl.toString()},{"offlineSkin",a.microsoft?QJsonObject():a.offlineSkin}};
 }
 AccountList AccountStore::load() const {
     AccountList result;QFile f(QDir(m_directory).filePath("accounts.json"));if(!f.exists())return result;
@@ -38,6 +40,7 @@ AccountList AccountStore::load() const {
     QSet<QString> seen;
     for(const auto &entry:root.value("accounts").toArray()){
         const auto o=entry.toObject();Account a;a.id=o.value("id").toString();a.name=o.value("name").toString();a.uuid=o.value("uuid").toString();a.microsoft=o.value("type")=="microsoft";a.clientId=o.value("clientId").toString();a.remembered=o.value("remembered").toBool();a.needsLogin=o.value("needsLogin").toBool();a.skinUrl=QUrl(o.value("skinUrl").toString());
+        a.offlineSkin=o.value("offlineSkin").toObject();
         if(!QStringList{"microsoft","offline"}.contains(o.value("type").toString())||!accountProblem(a).isEmpty()||seen.contains(a.id)){result.error=QCoreApplication::translate("M2CL", "账号列表包含无效或重复记录，原文件未被覆盖");result.accounts.clear();return result;}seen.insert(a.id);result.accounts.append(a);
     }
     result.selected=root.value("selected").toString();if(!result.selected.isEmpty()&&!seen.contains(result.selected)){result.error=QCoreApplication::translate("M2CL", "选中的账号不存在，请在账号管理中重新选择");result.selected.clear();}

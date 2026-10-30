@@ -18,20 +18,17 @@
 #include <QVBoxLayout>
 
 namespace mc {
-namespace {
-class ChoicePopup final : public QFrame {
-public:
-    using QFrame::QFrame;
-protected:
-    void paintEvent(QPaintEvent *) override {
+RoundedPopup::RoundedPopup(QWidget *parent):QFrame(parent,Qt::Popup|Qt::FramelessWindowHint|Qt::NoDropShadowWindowHint){
+    setAttribute(Qt::WA_TranslucentBackground);setProperty("choicePopup",true);
+}
+void RoundedPopup::paintEvent(QPaintEvent *) {
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
         auto border=palette().color(QPalette::Text);border.setAlpha(45);
         painter.setPen(QPen(border,1));painter.setBrush(palette().color(QPalette::Base));
         painter.drawRoundedRect(QRectF(rect()).adjusted(.5,.5,-.5,-.5),8,8);
-    }
-};
 }
+void RoundedPopup::keyPressEvent(QKeyEvent *event){if(event->key()==Qt::Key_Escape){close();return;}QFrame::keyPressEvent(event);}
 void SelectBox::setOptionsState(bool loading, const QString &error) {
     setProperty("optionsLoading",loading);setProperty("optionsError",error);
     if(m_popup && m_popup->isVisible())showPopup();
@@ -41,7 +38,7 @@ void SelectBox::showPopup() {
     const int selectedIndex = isEditable() ? findText(currentText()) : currentIndex();
     if (m_popup) { m_popup->close(); m_popup->deleteLater(); }
     m_popupLists.clear();
-    auto popup = new ChoicePopup(this, Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+    auto popup = new RoundedPopup(this);
     m_popup = popup;popup->setObjectName("selectPopup");popup->setProperty("choicePopup",true);
     popup->setAttribute(Qt::WA_TranslucentBackground);popup->setAccessibleName(accessibleName());popup->installEventFilter(this);
     auto body=new QVBoxLayout(popup);body->setContentsMargins(7,7,7,7);body->setSpacing(7);

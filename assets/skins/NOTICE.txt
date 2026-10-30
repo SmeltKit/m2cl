@@ -1,0 +1,10 @@
+Minecraft default player textures
+Copyright Mojang AB. All rights remain with the respective rights holders.
+
+The four unchanged Steve/Alex textures were extracted from the official
+Minecraft Java Edition 1.20.1 client JAR, at:
+assets/minecraft/textures/entity/player/{wide,slim}/{steve,alex}.png
+
+They are used for the default-player skin selector and preview. They are
+Minecraft assets, not original M2CL code, and are not relicensed under GPL.
+Minecraft: https://www.minecraft.net/

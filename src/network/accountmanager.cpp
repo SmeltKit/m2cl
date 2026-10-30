@@ -4,6 +4,7 @@
 
 #include <QCoreApplication>
 #include "accountmanager.h"
+#include "core/skins.h"
 #include <QJsonDocument>
 #include <QTimer>
 #include <QtConcurrent/QtConcurrentRun>
@@ -32,12 +33,22 @@ AccountManager::AccountManager(const QString &directory,const QString &legacyPla
 AccountManager::~AccountManager(){m_auth.cancel();m_job.waitForFinished();}
 Account AccountManager::find(const QString &id) const{for(const auto &a:m_accounts)if(a.id==id)return a;return {};}
 Account AccountManager::current() const{return find(m_selected);}
+bool AccountManager::requiresLogin(const Account &a) const {
+    return a.microsoft && m_sessions.value(a.id).identity.expires<=QDateTime::currentDateTimeUtc().addSecs(90)
+        && (a.needsLogin || !a.remembered);
+}
 QString AccountManager::state(const Account &a) const{if(!a.microsoft)return QCoreApplication::translate("M2CL", "离线角色");const auto session=m_sessions.value(a.id);if(session.identity.expires>QDateTime::currentDateTimeUtc().addSecs(90))return a.remembered?QCoreApplication::translate("M2CL", "已登录"):QCoreApplication::translate("M2CL", "已登录 · 当前会话");if(a.needsLogin||!a.remembered)return QCoreApplication::translate("M2CL", "需要重新登录");return QCoreApplication::translate("M2CL", "启动时刷新登录");}
 void AccountManager::setBusy(bool value){m_busy=value;emit busyChanged();}
 void AccountManager::error(const AuthFailure &failure){if(failure.reloginRequired&&!m_expectedId.isEmpty()){m_sessions.remove(m_expectedId);auto records=m_accounts;for(auto &a:records)if(a.id==m_expectedId)a.needsLogin=true;QString ignored;commit(records,m_selected,&ignored);}setBusy(false);emit failed(failure);}
 bool AccountManager::commit(const QList<Account> &accounts,const QString &selected,QString *error){if(!m_loadError.isEmpty()){if(error)*error=m_loadError;return false;}if(!m_store.save(accounts,selected,error))return false;m_accounts=accounts;m_selected=selected;emit changed();return true;}
 QString AccountManager::addOffline(const QString &name){if(m_busy)return QCoreApplication::translate("M2CL", "请先完成当前账号操作");if(!validPlayerName(name))return QCoreApplication::translate("M2CL", "玩家名需要 1–16 位英文字母、数字或下划线");const auto a=offlineAccount(name);if(!find(a.id).id.isEmpty())return select(a.id);auto records=m_accounts;records.append(a);QString error;commit(records,a.id,&error);return error;}
 QString AccountManager::select(const QString &id){if(m_busy)return QCoreApplication::translate("M2CL", "请先完成当前账号操作");if(find(id).id.isEmpty())return QCoreApplication::translate("M2CL", "请选择有效账号");QString error;commit(m_accounts,id,&error);return error;}
+QString AccountManager::setOfflineSkin(const QString &id,const QJsonObject &skin){
+    if(m_busy)return QCoreApplication::translate("M2CL","请先完成当前账号操作");auto records=m_accounts;
+    const auto problem=skinSettingsProblem(skin);if(!problem.isEmpty())return problem;
+    for(auto &account:records)if(account.id==id&&!account.microsoft){account.offlineSkin=skin;QString error;commit(records,m_selected,&error);return error;}
+    return QCoreApplication::translate("M2CL","请选择离线角色编辑皮肤");
+}
 void AccountManager::remove(const QString &id){if(m_busy)return;const auto a=find(id);if(a.id.isEmpty())return;if(!m_loadError.isEmpty()){error({QCoreApplication::translate("M2CL", "账号列表不可修改"),m_loadError,"account_store_failed",false});return;}setBusy(true);m_pending={};m_jobId=id;m_jobKind=Job::Remove;emit progress(QCoreApplication::translate("M2CL", "正在移除账号与已保存凭据"));const auto vault=m_vault;const bool remembered=a.microsoft&&a.remembered;m_jobPending=true;m_job.setFuture(QtConcurrent::run([vault,id,remembered]{return CredentialResult{{},remembered?vault->remove(id):QString()};}));emit busyChanged();}
 void AccountManager::login(const QString &clientId,bool remember,const QString &expectedId){if(m_busy)return;m_pending={};m_expectedId=expectedId;m_remember=remember;setBusy(true);m_auth.login(clientId);}
 void AccountManager::ensureSession(const QString &id){

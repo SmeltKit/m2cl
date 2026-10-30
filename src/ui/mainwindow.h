@@ -33,6 +33,8 @@ namespace mc {
 class NetworkNotice;
 class AccountManager;
 class AccountsPanel;
+class HomeAccountCard;
+class AvatarCache;
 class MainWindow final : public QMainWindow {
     Q_OBJECT
 public:
@@ -97,7 +99,8 @@ private:
     Settings m_settings;
     AccountManager *m_accounts=nullptr;
     AccountsPanel *m_accountsPanel=nullptr;
-    QPushButton *m_accountButton=nullptr;
+    HomeAccountCard *m_accountCard=nullptr;
+    AvatarCache *m_avatars=nullptr;
     QPalette m_systemPalette;
     QList<Instance> m_instances;
     QList<JavaRuntime> m_javas;
@@ -119,6 +122,8 @@ private:
     QPushButton *m_modSearchRetry = nullptr;
     QPushButton *m_modRefresh = nullptr;
     BusySpinner *m_modSearchSpinner = nullptr;
+    QWidget *m_modCategoryState=nullptr;
+    BusySpinner *m_modCategorySpinner=nullptr;
     bool m_modVersionPending = false;
     bool m_modSearchPending = false;
     bool m_modInstallActive = false;
@@ -155,6 +160,7 @@ private:
     QLabel *m_status = nullptr, *m_heroTitle = nullptr, *m_instanceCount = nullptr;
     QLabel *m_libraryDetail = nullptr, *m_downloadStatus = nullptr;
     QLabel *m_heroPath = nullptr, *m_heroVersion = nullptr, *m_heroLoader = nullptr, *m_heroJava = nullptr;
+    QLabel *m_heroPlayer=nullptr;
     QLabel *m_libraryCount = nullptr;
     QPushButton *m_heroLaunch = nullptr, *m_heroEdit = nullptr, *m_heroOpen = nullptr;
     QListWidget *m_roots = nullptr;

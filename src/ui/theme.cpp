@@ -163,6 +163,21 @@ void applyTheme(const Theme &t) {
         QLabel#pageTitle { font-size: 22px; font-weight: 600; }
         QLabel#heroTitle { font-size: 23px; font-weight: 600; }
         QLabel#sectionTitle { font-size: 18px; font-weight: 600; }
+        QLabel#homePlayerName { font-size: 20px; font-weight: 600; }
+        QLabel#homeAccountState { font-size: 13px; }
+        QPushButton#homeManageAccounts { padding: 8px; }
+        QListWidget[accountPickerList="true"] { background: transparent; border: none; padding: 0; outline: none; }
+        QListWidget[accountPickerList="true"]::item { border: none; border-radius: 6px; }
+        QListWidget[accountPickerList="true"]::item:hover, QListWidget[accountPickerList="true"]::item:selected { background: @soft@; }
+        QLabel[accountPickerName="true"] { font-size: 15px; font-weight: 600; }
+        QLabel[accountPickerDetail="true"] { font-size: 12px; }
+        QPushButton[accountPickerAction="true"] { background: transparent; border: none; text-align: left; padding: 8px 12px; }
+        QPushButton[accountPickerAction="true"]:hover { background: @soft@; }
+        QFrame#homeAccountModes { background: transparent; border: none; }
+        QPushButton[accountMode="true"] { border: none; border-bottom: 2px solid transparent; background: transparent; color: @muted@; padding: 9px 12px; border-radius: 0; }
+        QPushButton[accountMode="true"]:checked { background: transparent; color: @accent@; border-bottom-color: @accent@; font-weight: 600; }
+        QPushButton[accountMode="true"]:hover { background: @soft@; color: @accent@; }
+        QLabel#heroPlayer { color: white; font-size: 13px; }
         QLabel#instanceSettingsTitle { font-size: 20px; font-weight: 600; }
         QSlider#instanceMemorySlider { min-height: 32px; }
         QSlider#instanceMemorySlider::groove:horizontal { height: 4px; background: @line@; border-radius: 2px; }

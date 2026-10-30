@@ -163,7 +163,7 @@ private slots:
         QTemporaryDir dir;mc::Settings settings;settings.microsoftClientId="796724ab-c62a-48dd-983b-d6fecf88ce48";mc::AccountManager manager(dir.path(),"Player");QSignalSpy requested(&manager,&mc::AccountManager::browserRequested);mc::MicrosoftLoginDialog dialog(manager,mc::AccountsPanel::configuredClientId(settings));dialog.show();auto start=dialog.findChild<QPushButton *>("startMicrosoftLogin");QVERIFY(start->isEnabled());start->click();QCOMPARE(requested.size(),1);const QUrlQuery query(requested.first().first().toUrl());QCOMPARE(query.queryItemValue("client_id"),settings.microsoftClientId);QCOMPARE(query.queryItemValue("redirect_uri").section(':',0,1),QString("http://localhost"));QVERIFY(manager.busy());dialog.reject();QVERIFY(!manager.busy());QVERIFY(!manager.current().microsoft);
     }
     void offlineAccountSelectionPersistsAndCancelledCreationIsInert() {
-        QTemporaryDir dir;QVERIFY(fixture(dir.path(),1));mc::MainWindow window{mc::SettingsStore(dir.path())};window.show();QTRY_VERIFY(window.ready());window.showAccounts();auto add=window.findChild<QPushButton *>("addOfflineAccount");bool filled=false;QTimer::singleShot(20,&window,[&]{auto dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget());if(!dialog)return;auto input=dialog->findChild<QLineEdit *>("newOfflinePlayer");if(!input)return;input->setText("Second_Player");filled=true;dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();});add->click();QVERIFY(filled);auto manager=window.findChild<mc::AccountManager *>();QCOMPARE(manager->current().name,QString("Second_Player"));QCOMPARE(manager->accounts().size(),2);QCOMPARE(mc::AccountStore(dir.path()).load().selected,manager->current().id);QVERIFY(window.findChild<QPushButton *>("accountSummaryButton")->text().contains("Second"));
+        QTemporaryDir dir;QVERIFY(fixture(dir.path(),1));mc::MainWindow window{mc::SettingsStore(dir.path())};window.show();QTRY_VERIFY(window.ready());window.showAccounts();auto add=window.findChild<QPushButton *>("addOfflineAccount");bool filled=false;QTimer::singleShot(20,&window,[&]{auto dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget());if(!dialog)return;auto input=dialog->findChild<QLineEdit *>("newOfflinePlayer");if(!input)return;input->setText("Second_Player");filled=true;dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();});add->click();QVERIFY(filled);auto manager=window.findChild<mc::AccountManager *>();QCOMPARE(manager->current().name,QString("Second_Player"));QCOMPARE(manager->accounts().size(),2);QCOMPARE(mc::AccountStore(dir.path()).load().selected,manager->current().id);QVERIFY(window.findChild<QLabel *>("homePlayerName")->text().contains("Second"));
         QTimer::singleShot(20,&window,[&]{if(auto dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()))dialog->reject();});add->click();QCOMPARE(manager->accounts().size(),2);
     }
     void expiredMicrosoftAccountOffersExplicitRelogin() {
@@ -600,6 +600,21 @@ private slots:
         notice.failure(QStringLiteral("版本列表加载失败"),QStringLiteral("HTTP 503 · 服务暂时不可用\n请求：https://api.modrinth.com/v2/project/sodium/version"));QVERIFY(notice.findChild<QLabel *>("networkErrorSummary")->text().contains("HTTP 503"));
         if(qEnvironmentVariableIsSet("M2CL_NETWORK_REVIEW"))for(bool dark:{false,true}){mc::applyTheme(mc::makeTheme("forest",dark));notice.resize(680,100);QCoreApplication::processEvents();notice.grab().save(qEnvironmentVariable("M2CL_NETWORK_REVIEW")+(dark?"/http-error-dark.png":"/http-error-light.png"));}mc::applyTheme(mc::makeTheme("forest",false));
     }
+    void allResourceMarketsLoadCategoriesInsideTheirOwnColumn() {
+        for(const auto navigation:{"", "shaderMarketNav", "resourcepackMarketNav"}){
+            QTemporaryDir dir;QVERIFY(fixture(dir.path()));mc::MainWindow window{mc::SettingsStore(dir.path())};window.show();QTRY_VERIFY(window.ready());
+            if(QString(navigation).isEmpty())window.changePage(2);else window.findChild<QPushButton *>(navigation)->click();
+            auto client=window.findChild<mc::ResourceClient *>();auto categories=window.findChild<QListWidget *>("modCategories");
+            auto spinner=window.findChild<mc::BusySpinner *>("modCategorySpinner");auto results=window.findChild<mc::BusySpinner *>("modSearchSpinner");
+            client->tagsLoading();window.findChild<QPushButton *>("searchMods")->click();QCoreApplication::processEvents();
+            QVERIFY(spinner->isVisible());QVERIFY(results->isVisible());QVERIFY(categories->isAncestorOf(spinner));
+            const auto center=spinner->mapTo(categories->viewport(),spinner->rect().center());
+            QVERIFY(categories->viewport()->rect().contains(center));QVERIFY(qAbs(center.x()-categories->viewport()->rect().center().x())<=2);
+            if(qEnvironmentVariableIsSet("M2CL_HOME_ACCOUNT_REVIEW"))window.grab().save(qEnvironmentVariable("M2CL_HOME_ACCOUNT_REVIEW")+"/loading-"+QString(navigation)+".png");
+            mc::ResourceTags tags;tags.gameVersions=QStringList{"1.20.1"};client->tagsReady(tags);QVERIFY(!spinner->isVisible());QVERIFY(results->isVisible());
+            client->searchFailed("Timeout");QVERIFY(!results->isVisible());
+        }
+    }
     void marketFilterFailureIsScopedAndClearsAfterSuccessfulReload() {
         QTemporaryDir dir;QVERIFY(fixture(dir.path()));mc::MainWindow window{mc::SettingsStore(dir.path())};window.resize(1120,760);window.show();QTRY_VERIFY(window.ready());window.changePage(2);
         auto client=window.findChild<mc::ResourceClient *>();auto notice=window.findChild<mc::NetworkNotice *>("modFilterNetworkState");
@@ -607,7 +622,7 @@ private slots:
         client->tagsFailed(QStringLiteral("分类加载失败：连接超时\n加载器加载失败：连接超时\n游戏版本加载失败：连接超时"));QVERIFY(notice->isVisible());
         auto list=window.findChild<QListWidget *>("modResults");QCOMPARE(list->count(),1);QVERIFY(!notice->findChild<QPlainTextEdit *>()->isVisible());QVERIFY(list->isVisible());
         if(qEnvironmentVariableIsSet("M2CL_NETWORK_REVIEW")){const auto out=qEnvironmentVariable("M2CL_NETWORK_REVIEW");QDir().mkpath(out);QTest::qWait(30);window.grab().save(out+"/market-filter-failure.png");}
-        client->tagsLoading();QVERIFY(notice->findChild<mc::BusySpinner *>()->isVisible());QVERIFY(notice->findChild<QPlainTextEdit *>()->toPlainText().isEmpty());
+        client->tagsLoading();QVERIFY(window.findChild<mc::BusySpinner *>("modCategorySpinner")->isVisible());QVERIFY(notice->isHidden());QVERIFY(notice->findChild<QPlainTextEdit *>()->toPlainText().isEmpty());
         mc::ResourceTags tags;tags.gameVersions=QStringList{"1.20.1"};tags.gameVersionTypes={{"1.20.1","release"}};client->tagsReady(tags);QVERIFY(notice->isHidden());QCOMPARE(list->count(),1);
         if(qEnvironmentVariableIsSet("M2CL_NETWORK_REVIEW"))window.grab().save(qEnvironmentVariable("M2CL_NETWORK_REVIEW")+"/market-recovered.png");
         // A version request must not stop a search spinner or write to the download task.

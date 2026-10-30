@@ -5,6 +5,7 @@
 #include <QCoreApplication>
 #include "core/i18n.h"
 #include "accountspanel.h"
+#include "accountwidgets.h"
 #include "network/networkerror.h"
 #include "networknotice.h"
 #include "network/downloadsource.h"
@@ -128,6 +129,7 @@ MainWindow::MainWindow(SettingsStore store, QWidget *parent)
     QString error;
     m_settings = m_store.load(&error);
     m_accounts=new AccountManager(m_store.directory(),m_settings.offlinePlayer,this);
+    m_avatars=new AvatarCache(m_store.directory(),this);
     m_javas = javaCatalogFromJson(m_settings.javaCatalog);
     if (m_settings.gameRoots.isEmpty() && QDir(defaultGameRoot()).exists()) m_settings.gameRoots.append(defaultGameRoot());
     setWindowTitle(QStringLiteral("Mercury MC Launcher · M²CL"));
@@ -177,7 +179,6 @@ MainWindow::MainWindow(SettingsStore store, QWidget *parent)
         connect(item,&QPushButton::clicked,this,[this,type=entry.first]{m_resourceReturnPath.clear();m_marketReturn->hide();setMarketType(type);m_modQuery->clear();m_modVersion->setCurrentIndex(0);closeModDetails();m_modViews->setCurrentIndex(0);changePage(2);searchMods();});
     }
     side->addStretch();
-    m_accountButton=button({});m_accountButton->setObjectName("accountSummaryButton");m_accountButton->setProperty("nav",true);m_accountButton->setIcon(lineIcon(Glyph::Gamepad));m_accountButton->setFixedHeight(58);side->addWidget(m_accountButton);connect(m_accountButton,&QPushButton::clicked,this,&MainWindow::showAccounts);
     layout->addWidget(sidebar);
     auto main = new QVBoxLayout; main->setContentsMargins(0, 0, 0, 0); main->setSpacing(0);
     m_bar=new WindowBar(this);main->addWidget(m_bar);
@@ -251,7 +252,7 @@ MainWindow::MainWindow(SettingsStore store, QWidget *parent)
         commitModPlan();
     });
     connect(&m_modApplyWatcher,&QFutureWatcher<ModInstallResult>::finished,this,[this]{const auto result=m_modApplyWatcher.result();m_modInstallActive=false;m_downloadInProgress=false;m_javaManager->setGameTaskBusy(false);m_activeDownloadMessage=result.error.isEmpty()?QCoreApplication::translate("M2CL", "已完成 → %1 · 下载 %2 项，启用 %3 项，复用 %4 项").arg(m_pendingModPlan.target.id).arg(result.installed.size()-result.enabled.size()).arg(result.enabled.size()).arg(m_pendingModPlan.reusedProjects.size()):result.error;m_activeDownloadProgress=result.error.isEmpty()?1000:-1;updateDownloadPanel();if(result.error.isEmpty())showInstanceMods(m_pendingModPlan.target.path);else QMessageBox::information(this,QCoreApplication::translate("M2CL", "安装未完成"),result.error);});
-    connect(&m_resources,&ResourceClient::tagsLoading,this,[this]{qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(true);m_modRefresh->setEnabled(false);m_modTagStatus->loading();});
+    connect(&m_resources,&ResourceClient::tagsLoading,this,[this]{qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(true);m_modRefresh->setEnabled(false);m_modTagStatus->clear();m_modCategoryState->show();});
     connect(&m_resources, &ResourceClient::tagsReady, this, [this](const ResourceTags &tags) {
         m_modTags = tags;
         const QSignalBlocker categories(m_modCategories), versions(m_modVersion), loaders(m_modLoader);
@@ -277,10 +278,10 @@ MainWindow::MainWindow(SettingsStore store, QWidget *parent)
         auto index=m_modLoader->findData(loader);
         if(index<0 && !loader.isEmpty()){m_modLoader->addItem(resourceTagLabel(loader),loader);index=m_modLoader->count()-1;m_modLoader->setItemData(index,common.contains(loader)?"common":"other",SelectBox::PopupGroupRole);}
         m_modLoader->setCurrentIndex(qMax(0,index));
-        m_modTagStatus->clear();m_modTagStatus->hide();m_modRefresh->setEnabled(true);m_modRefresh->setText(QCoreApplication::translate("M2CL", "刷新筛选"));qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(false);
+        m_modCategoryState->hide();m_modTagStatus->clear();m_modTagStatus->hide();m_modRefresh->setEnabled(true);m_modRefresh->setText(QCoreApplication::translate("M2CL", "刷新筛选"));qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(false);
         if(auto view=m_modDetails->findChild<ModVersionView *>())view->setSupportedVersionMetadata(tags);
     });
-    connect(&m_resources, &ResourceClient::tagsFailed, this, [this](const QString &error){ m_modTagStatus->failure(QCoreApplication::translate("M2CL", "部分筛选项未能加载，仍可浏览已有结果"),error);m_modRefresh->setEnabled(true);m_modRefresh->setText(QCoreApplication::translate("M2CL", "重试筛选"));qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(false,m_modTags.gameVersions.isEmpty()?error:QString()); });
+    connect(&m_resources, &ResourceClient::tagsFailed, this, [this](const QString &error){ m_modCategoryState->hide();m_modTagStatus->failure(QCoreApplication::translate("M2CL", "部分筛选项未能加载，仍可浏览已有结果"),error);m_modRefresh->setEnabled(true);m_modRefresh->setText(QCoreApplication::translate("M2CL", "重试筛选"));qobject_cast<SelectBox *>(m_modVersion)->setOptionsState(false,m_modTags.gameVersions.isEmpty()?error:QString()); });
     connect(&m_resources, &ResourceClient::searchPageReady, this, [this](int total, int offset){ m_modTotal=total; m_modOffset=offset; });
     connect(&m_resources, &ResourceClient::iconReady, this, [this](const QUrl &url, const QByteArray &bytes){
         QBuffer buffer;buffer.setData(bytes);buffer.open(QIODevice::ReadOnly);QImageReader reader(&buffer);
@@ -354,8 +355,12 @@ MainWindow::MainWindow(SettingsStore store, QWidget *parent)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     connect(qApp->styleHints(), &QStyleHints::colorSchemeChanged, this, [this] { if (m_settings.appearance == "system") updateAppearance(); });
 #endif
-    auto updateAccount=[this]{const auto a=m_accounts->current();m_accountButton->setText(a.id.isEmpty()?QCoreApplication::translate("M2CL", "添加账号"):m_accountButton->fontMetrics().elidedText(a.name,Qt::ElideRight,90)+QStringLiteral("\n")+(a.microsoft?QCoreApplication::translate("M2CL", "微软账号"):QCoreApplication::translate("M2CL", "离线角色")));m_accountButton->setAccessibleName(QCoreApplication::translate("M2CL", "账号管理，当前角色：%1").arg(a.name));refreshInstanceViews();};
-    connect(m_accounts,&AccountManager::changed,this,updateAccount);updateAccount();
+    connect(m_accounts,&AccountManager::changed,this,&MainWindow::refreshInstanceViews);
+    connect(m_accountCard,&HomeAccountCard::managementRequested,this,&MainWindow::showAccounts);
+    connect(m_accountCard,&HomeAccountCard::microsoftLoginRequested,this,[this](const QString &id){m_accountsPanel->login(id);});
+    connect(m_accountCard,&HomeAccountCard::offlineCreationRequested,m_accountsPanel,&AccountsPanel::addOffline);
+    connect(m_accountCard,&HomeAccountCard::skinEditRequested,m_accountsPanel,&AccountsPanel::editSkin);
+    connect(m_accountsPanel,&AccountsPanel::configurationRequested,this,&MainWindow::showAccounts);
     updateAppearance(); changePage(0); refreshCatalog();
     qApp->installEventFilter(this);
     for(auto child:findChildren<QWidget *>())child->setMouseTracking(true);
@@ -371,7 +376,9 @@ MainWindow::~MainWindow() {
 }
 QWidget *MainWindow::homePage() {
     QVBoxLayout *body; auto widget=page(&body);body->setContentsMargins(24,8,24,24);body->setSpacing(ui::SectionSpace);
-    m_hero=new CoverView;m_hero->setObjectName("heroCover");m_hero->setFixedHeight(282);
+    body->addWidget(label(QCoreApplication::translate("M2CL", "开始"),"pageTitle"));
+    m_accountCard=new HomeAccountCard(*m_accounts,*m_avatars);body->addWidget(m_accountCard);
+    m_hero=new CoverView;m_hero->setObjectName("heroCover");m_hero->setProperty("fixedPreview",true);m_hero->setFixedHeight(225);
     auto heroLayout=column(m_hero,24);heroLayout->setSpacing(9);heroLayout->addStretch();
     m_heroTitle=label(QCoreApplication::translate("M2CL", "把世界放进书桌"),"heroTitle");heroLayout->addWidget(m_heroTitle);
     auto badges=new QHBoxLayout;badges->setSpacing(6);
@@ -382,15 +389,18 @@ QWidget *MainWindow::homePage() {
     m_heroLaunch=button(QCoreApplication::translate("M2CL", "添加游戏目录"),true);m_heroLaunch->setObjectName("heroAction");m_heroLaunch->setIcon(lineIcon(Glyph::Play,Qt::white));m_heroLaunch->setIconSize(QSize(19,19));m_heroLaunch->setMinimumWidth(180);actions->addWidget(m_heroLaunch);
     connect(m_heroLaunch,&QPushButton::clicked,this,[this]{selectedInstance()?launchInstance():createInstance();});
     actions->addStretch();
-    m_heroOpen=new GlassButton(QCoreApplication::translate("M2CL", "打开目录"));m_heroOpen->setProperty("onCover",true);m_heroOpen->setIcon(lineIcon(Glyph::Folder,Qt::white));actions->addWidget(m_heroOpen);
-    m_heroEdit=new GlassButton(QCoreApplication::translate("M2CL", "编辑实例"));m_heroEdit->setObjectName("editInstance");m_heroEdit->setProperty("onCover",true);m_heroEdit->setIcon(lineIcon(Glyph::Edit,Qt::white));actions->addWidget(m_heroEdit);
-    auto addMods=new GlassButton(QCoreApplication::translate("M2CL", "添加模组"));addMods->setObjectName("heroAddMods");addMods->setProperty("onCover",true);addMods->setIcon(lineIcon(Glyph::Plus,Qt::white));actions->addWidget(addMods);connect(addMods,&QPushButton::clicked,this,[this,addMods]{if(auto instance=selectedInstance())addModsMenu(instance->path,addMods->mapToGlobal(QPoint(0,addMods->height())));});
+    m_heroOpen=new GlassButton(QCoreApplication::translate("M2CL", "打开目录"));m_heroOpen->setProperty("onCover",true);m_heroOpen->setProperty("heroAuxiliary",true);m_heroOpen->setIcon(lineIcon(Glyph::Folder,Qt::white));actions->addWidget(m_heroOpen);
+    m_heroEdit=new GlassButton(QCoreApplication::translate("M2CL", "编辑实例"));m_heroEdit->setObjectName("editInstance");m_heroEdit->setProperty("onCover",true);m_heroEdit->setProperty("heroAuxiliary",true);m_heroEdit->setIcon(lineIcon(Glyph::Edit,Qt::white));actions->addWidget(m_heroEdit);
+    auto addMods=new GlassButton(QCoreApplication::translate("M2CL", "添加模组"));addMods->setObjectName("heroAddMods");addMods->setProperty("onCover",true);addMods->setProperty("heroAuxiliary",true);addMods->setIcon(lineIcon(Glyph::Plus,Qt::white));actions->addWidget(addMods);connect(addMods,&QPushButton::clicked,this,[this,addMods]{if(auto instance=selectedInstance())addModsMenu(instance->path,addMods->mapToGlobal(QPoint(0,addMods->height())));});
     auto more=new GlassButton(QCoreApplication::translate("M2CL", "更多操作"));more->setProperty("onCover",true);more->setIcon(lineIcon(Glyph::More,Qt::white));actions->addWidget(more);
     connect(m_heroOpen,&QPushButton::clicked,this,[this]{if(auto instance=selectedInstance())openDirectory(instance->gameDirectory);});
     connect(m_heroEdit,&QPushButton::clicked,this,[this]{editInstance();});
     connect(more,&QPushButton::clicked,this,[this,more]{if(auto instance=selectedInstance())instanceMenu(instance->path,more->mapToGlobal(QPoint(0,more->height())));});
     heroLayout->addLayout(actions);
-    m_heroPath=label(QCoreApplication::translate("M2CL", "安装原版或添加已有目录，开启你的下一段冒险。"));m_heroPath->setObjectName("heroPath");m_heroPath->setWordWrap(false);m_heroPath->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);heroLayout->addWidget(m_heroPath);
+    m_heroPath=label(QCoreApplication::translate("M2CL", "安装原版或添加已有目录，开启你的下一段冒险。"));m_heroPath->setObjectName("heroPath");m_heroPath->setWordWrap(false);m_heroPath->setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Preferred);
+    auto playerRow=new QHBoxLayout;playerRow->setContentsMargins(0,0,0,0);
+    m_heroPlayer=label({});m_heroPlayer->setObjectName("heroPlayer");m_heroPlayer->setWordWrap(false);playerRow->addWidget(m_heroPlayer);playerRow->addStretch();m_heroPath->setAlignment(Qt::AlignRight);playerRow->addWidget(m_heroPath,1);
+    heroLayout->addLayout(playerRow);
     body->addWidget(m_hero);
     auto title=new QHBoxLayout;title->setSpacing(9);title->addWidget(label(QCoreApplication::translate("M2CL", "我的实例"),"sectionTitle"));
     m_instanceCount=label(QCoreApplication::translate("M2CL", "%n 个实例",nullptr,0),nullptr,true);title->addWidget(m_instanceCount);title->addStretch();
@@ -489,6 +499,11 @@ QWidget *MainWindow::modsPage() {
     m_modCategories->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     auto all = new QListWidgetItem(lineIcon(Glyph::Grid),QCoreApplication::translate("M2CL", "全部分类"),m_modCategories);
     all->setData(Qt::UserRole, ""); m_modCategories->setCurrentRow(0);
+    auto categoryOverlay=new QVBoxLayout(m_modCategories->viewport());categoryOverlay->setContentsMargins(0,0,0,0);
+    m_modCategoryState=new QWidget;m_modCategoryState->setObjectName("modCategoryLoadingState");m_modCategoryState->setAutoFillBackground(true);m_modCategoryState->setBackgroundRole(QPalette::Base);
+    auto categoryLoading=new QVBoxLayout(m_modCategoryState);categoryLoading->setContentsMargins(0,0,0,0);categoryLoading->addStretch();
+    m_modCategorySpinner=new BusySpinner;m_modCategorySpinner->setObjectName("modCategorySpinner");categoryLoading->addWidget(m_modCategorySpinner,0,Qt::AlignHCenter);categoryLoading->addStretch();
+    categoryOverlay->addWidget(m_modCategoryState);m_modCategoryState->hide();
     results->addWidget(m_modCategories);
     auto listing = new QVBoxLayout; listing->setSpacing(8); results->addLayout(listing,1);
     auto pager = new QHBoxLayout;
@@ -616,7 +631,7 @@ QWidget *MainWindow::settingsPage() {
     connect(legal,&QPushButton::clicked,this,[this]{ProjectLegalDialog dialog(this);dialog.exec();});
     generalLayout->addWidget(info); generalLayout->addStretch();auto generalScroll=new QScrollArea;generalScroll->setWidgetResizable(true);generalScroll->setFrameShape(QFrame::NoFrame);generalScroll->setWidget(general);m_settingsSections->addWidget(generalScroll);
     m_javaManager = new JavaManager(m_settings, m_store); m_settingsSections->addWidget(m_javaManager);
-    m_accountsPanel=new AccountsPanel(*m_accounts,m_settings,m_store);m_settingsSections->addWidget(m_accountsPanel);
+    m_accountsPanel=new AccountsPanel(*m_accounts,*m_avatars,m_settings,m_store);m_settingsSections->addWidget(m_accountsPanel);
     for (int i = 0; i < sections.size(); ++i) connect(sections.at(i), &QPushButton::clicked, this, [this, i] { m_settingsSections->setCurrentIndex(i); });
     connect(m_settingsSections, &QStackedWidget::currentChanged, this, [sections](int index) { for (int i = 0; i < sections.size(); ++i) sections.at(i)->setChecked(i == index); });
     connect(m_javaManager, &JavaManager::changed, this, [this] { m_javas = m_javaManager->runtimes(); refreshInstanceViews(); });
@@ -665,7 +680,10 @@ void MainWindow::refreshInstanceViews() {
     for(auto grid:{m_homeGrid,m_libraryGrid})grid->setInstances(m_instances,m_settings.selectedInstance,m_settings.favoriteInstances,m_settings.instanceNames,m_settings.coverOverrides);
     const auto count=QCoreApplication::translate("M2CL", "%n 个实例",nullptr,m_instances.size());m_instanceCount->setText(count);m_libraryCount->setText(count);
     const auto instance=selectedInstance();
-    for(auto action:m_hero->findChildren<QPushButton *>())if(action->property("onCover").toBool())action->setVisible(instance);
+    const auto account=m_accounts->current();
+    m_heroPlayer->setVisible(instance&&!account.id.isEmpty());
+    m_heroPlayer->setText(QCoreApplication::translate("M2CL", "使用角色 %1").arg(account.name));
+    for(auto action:m_hero->findChildren<QPushButton *>())if(action->property("onCover").toBool())action->setVisible(instance&&(!action->property("heroAuxiliary").toBool()||width()>=1050));
     for(auto item:{m_heroVersion,m_heroLoader,m_heroJava})item->setVisible(instance);
     if(instance){
         m_hero->setCover(instance->version,m_settings.coverOverrides.value(instance->path).toString());m_heroTitle->setText(instanceName(*instance));
@@ -786,6 +804,9 @@ void MainWindow::showEvent(QShowEvent *event) {
 #endif
 }
 bool MainWindow::eventFilter(QObject *object,QEvent *event) {
+    if(object==this&&event->type()==QEvent::Resize&&m_hero){
+        for(auto action:m_hero->findChildren<QPushButton *>())if(action->property("heroAuxiliary").toBool())action->setVisible(selectedInstance()&&width()>=1050);
+    }
     if(object==this && event->type()==QEvent::Resize && m_modViews)QTimer::singleShot(0,this,[this]{updateModBrowseLayout(m_modViews->currentIndex()==1);});
     const auto widget=qobject_cast<QWidget *>(object);
     if(windowFlags().testFlag(Qt::FramelessWindowHint)&&widget&&widget->window()==this&&!isMaximized()&&!QApplication::activeModalWidget()){
@@ -966,6 +987,7 @@ void MainWindow::launchInstance() {
     m_settings.exitAfterLaunch = exit->isChecked(); save();
     InstallRequest request; request.root = instance.root; request.id = instance.id; request.version = instance.version; request.directory = instance.gameDirectory;
     request.identity=session.identity;request.player = session.identity.name; request.memoryMiB = m_settings.memoryMiB;
+    if(!account.microsoft){request.offlineSkin=m_accounts->current().offlineSkin;request.launcherDirectory=m_store.directory();}
     if(!configureJava(request,instance.path,&javaError)){QMessageBox::warning(this,QCoreApplication::translate("M2CL", "实例配置无法读取"),javaError);return;}request.launch = true;
     startInstall(request);
 }

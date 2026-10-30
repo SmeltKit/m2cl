@@ -18,6 +18,8 @@ struct VersionList { QJsonArray versions; QString error; };
 struct InstallRequest {
     QString root, id, version, directory, java, player;
     GameIdentity identity; // Ephemeral authenticated launch state; never written to version JSON.
+    QJsonObject offlineSkin;
+    QString launcherDirectory;
     QString downloadSource = QStringLiteral("auto");
     QString optifineLocalFile;
     QString optifineAction; // install / remove / empty (preserve)

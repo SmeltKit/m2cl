@@ -1,0 +1,7 @@
+<RCC><qresource prefix="/skins">
+<file alias="steve-wide.png">../assets/skins/steve-wide.png</file>
+<file alias="steve-slim.png">../assets/skins/steve-slim.png</file>
+<file alias="alex-wide.png">../assets/skins/alex-wide.png</file>
+<file alias="alex-slim.png">../assets/skins/alex-slim.png</file>
+<file alias="m2cl-skin-agent.jar">skin-agent/m2cl-skin-agent.jar</file>
+</qresource></RCC>

@@ -588,7 +588,7 @@ void InstanceCard::paintEvent(QPaintEvent *) {
 
 }
 InstanceGrid::InstanceGrid(QWidget *parent):QWidget(parent) {
-    setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);m_layout=new QGridLayout(this);m_layout->setContentsMargins(0,0,0,0);m_layout->setSpacing(ui::Space);
+    setSizePolicy(QSizePolicy::Ignored,QSizePolicy::Fixed);m_layout=new QGridLayout(this);m_layout->setSizeConstraint(QLayout::SetNoConstraint);m_layout->setContentsMargins(0,0,0,0);m_layout->setSpacing(ui::Space);
     m_empty=new QLabel(QCoreApplication::translate("M2CL", "还没有游戏实例\n安装原版或添加已有游戏目录，开始你的冒险。"),this);m_empty->setAlignment(Qt::AlignCenter);m_empty->setProperty("muted",true);m_empty->setObjectName("emptyInstances");
 }
 void InstanceGrid::setInstances(const QList<Instance> &instances,const QString &selected,const QStringList &favorites,const QJsonObject &names,const QJsonObject &covers) {
