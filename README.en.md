@@ -6,16 +6,20 @@
 
 <p align="center"><a href="README.md">简体中文</a> · <strong>English</strong></p>
 
+> **Project status: development discontinued indefinitely (2026-10-31).**
+> This project's application for the Minecraft API AppID allow list was not approved. As a result, M²CL development has stopped indefinitely, with no plans to resume.
+> The existing source code and documentation remain available, but no further updates or support are promised.
+> The current version remains an unfinished development preview; Microsoft / Minecraft online sign-in should not be considered functional.
+
 An independent desktop launcher for **Minecraft: Java Edition**, built with **C++17 and Qt Widgets**.
 M²CL organizes Java runtimes, mods, shaders and resource packs around individual game instances,
 with a forest-green interface and light, dark and system appearance modes.
 The project targets multiple platforms and architectures, spanning older and newer Windows systems, macOS and Linux. Performance and compatibility are still being evaluated.
 
 > **0.1.0 early development preview.** This version is intended for trying features and providing feedback. The interface, features, configuration format and platform coverage may still change substantially.
-> Larger updates are planned as core features mature and Microsoft / Minecraft API access review and real-account validation progress. Their timing and scope are not yet determined.
 > Microsoft-account authentication has been implemented, but real sign-in currently receives HTTP 403 from Minecraft Services.
-> API access for this application's own client ID has not been confirmed. This is not an approved release or a claim of working end-to-end online sign-in.
-> The current development build also includes offline-player launch without Microsoft authentication; its release authentication and ownership requirements still need to be revised before review.
+> API allow-list access for this application's own client ID was not approved. This is not an approved release or a claim of working end-to-end online sign-in.
+> The current development build also includes offline-player launch without Microsoft authentication; the intended release authentication and ownership requirements were not completed.
 
 ## Current features
 
@@ -34,7 +38,7 @@ Checks are specific to game, loader, mod, runtime and shader versions. Passing s
 
 ## Platforms and languages
 
-The following are **planned platform and architecture targets**. Compatibility validation is ongoing:
+The following are **platform and architecture targets and validation results recorded during development**. Unfinished validation is now on hold:
 
 | Platform | Target architectures | Current validation |
 | --- | --- | --- |
@@ -87,12 +91,14 @@ feature requires Java 8+ and Minecraft 1.7.2+; slim arms require Minecraft 1.8+.
 
 - Settings use the platform's application configuration directory; `--data-dir` selects an isolated directory. Runtime and launch settings belong to each instance.
 - Java downloads support Temurin, Zulu, Microsoft OpenJDK and Oracle OpenJDK. Minecraft's official runtime channel is used separately for automatic provisioning.
-- The resource market currently uses Modrinth. CurseForge integration and an application-owned API key are planned after the first complete version.
-- Microsoft sign-in uses this project's own public client ID. API access and live sign-in validation remain pending.
+- The resource market currently uses Modrinth. CurseForge integration was not completed and is now on hold.
+- Microsoft sign-in uses this project's own public client ID. The API allow-list application was not approved, and end-to-end live sign-in has not been validated.
   Refresh credentials are kept out of ordinary settings and saved through the OS credential store; session-only use is available explicitly when storage is unavailable.
 - Built-in version covers are AI-generated thematic illustrations, not gameplay screenshots. See [cover assets](assets/covers/README.md) for provenance and packaging notes.
 
-## Next steps
+## Unfinished plans at the time development stopped
+
+All plans below are on hold and do not represent a commitment to future updates.
 
 - Prepare authentication and game-entitlement enforcement for official review, request API access, and validate real sign-in and launching.
 - After the first complete version, apply for a project-owned CurseForge API key and add resource search, details, version filtering and downloads.
